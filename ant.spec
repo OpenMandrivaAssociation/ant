@@ -12,7 +12,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.2
+Release:        %mkrel 3.3
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -30,6 +30,7 @@ Source3:        http://www.apache.org/dist/ant/source/apache-ant-%{version}-src.
 # is installed/uninstalled
 Source4:        apache-ant-1.7.0.ant.conf
 Patch0:         apache-ant-1.7.0-rpmmode.patch
+Patch1:         apache-ant-1.7.0-native2ascii.patch
 # javah: BZ 157750
 # https://www.zarb.org/pipermail/jpackage-discuss/2005-September/008781.html
 # https://www.zarb.org/pipermail/jpackage-discuss/2005-September/008785.html
@@ -460,7 +461,8 @@ Javadoc pour %{name}.
 
 # Set rpm_mode=true by default
 %patch0 -p1
-
+# fix GNU Native2ASCII location
+%patch1 -p1
 # https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=157750
 # #157750: make the javah task work with java-gcj-compat
 %patch2 -p1
