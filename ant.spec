@@ -12,7 +12,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3
+Release:        %mkrel 3.3.1
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -36,24 +36,20 @@ Patch1:         apache-ant-1.7.0-native2ascii.patch
 # https://www.zarb.org/pipermail/jpackage-discuss/2005-September/008785.html
 # Message-ID: <432A8E37.8050101@zarb.org>
 Patch2:         apache-ant-1.7.0-javah.patch
-Requires:       java-devel
-Requires:       jaxp_parser_impl
+Requires:       xerces-j2
+#Requires:       jaxp_parser_impl
 Requires:       jpackage-utils >= 0:1.5
 %if %without bootstrap
 Requires:       xml-commons-apis
 %endif
-BuildRequires:  java-devel
-BuildRequires:  jaxp_parser_impl
+#BuildRequires:  jaxp_parser_impl
+BuildRequires:  xerces-j2
 BuildRequires:  jpackage-utils >= 0:1.5
-BuildRequires:  java-devel
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  xml-commons-apis
 %else
 BuildRequires:  junit
-%endif
-%if !%{gcj_support}
-BuildArch:      noarch
 %endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Obsoletes:      ant-optional ant-optional-full
@@ -65,9 +61,14 @@ Obsoletes:      %{name}-libs <= 0:1.5.2, %{name}-core <= 0:1.5.2
 Conflicts:      j2sdk-ant
 # libgcj aot-compiled native libraries
 %if %{gcj_support}
+Requires:       java-gcj-compat-devel
 BuildRequires:  java-gcj-compat-devel >= 0:1.0.31
 Requires(post): java-gcj-compat >= 0:1.0.31
 Requires(postun): java-gcj-compat >= 0:1.0.31
+%else
+Requires:       java-devel
+BuildRequires:  java-devel
+BuildArch:      noarch
 %endif
 Obsoletes:      ant-bootstrap
 Obsoletes:      ant-jai
@@ -479,16 +480,17 @@ cp src/main/org/apache/tools/ant/taskdefs/optional/javah/Kaffeh.java src/main/or
 perl -pi -e 's|kaffeh|javah|g' src/main/org/apache/tools/ant/taskdefs/optional/javah/MyJavah.java
 perl -pi -e 's|Kaffeh|MyJavah|g' src/main/org/apache/tools/ant/taskdefs/optional/javah/MyJavah.java
 
+export OPT_JAR_LIST=:
 %if %without bootstrap
-export CLASSPATH=$(build-classpath jaxp_parser_impl xml-commons-apis antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver)
-%ant jars
+export CLASSPATH=$(build-classpath xerces-j2 xml-commons-apis antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver)
+%{ant} jars
 %if %{build_javadoc}
-%ant javadocs
+%{ant} javadocs
 %endif
 %else
 export JAVA_HOME=%{java_home}
 export CLASSPATH=$JAVA_HOME/lib/tools.jar:$(build-classpath junit)
-sh build.sh --noconfig jars
+sh ./build.sh --noconfig jars
 %endif
 
 %install
