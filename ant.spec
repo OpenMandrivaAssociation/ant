@@ -12,7 +12,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3.1
+Release:        %mkrel 3.3.2
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -40,14 +40,14 @@ Requires:       xerces-j2
 #Requires:       jaxp_parser_impl
 Requires:       jpackage-utils >= 0:1.5
 %if %without bootstrap
-Requires:       xml-commons-apis
+Requires:       xml-commons-jaxp-1.3-apis
 %endif
 #BuildRequires:  jaxp_parser_impl
 BuildRequires:  xerces-j2
 BuildRequires:  jpackage-utils >= 0:1.5
 %if %without bootstrap
 BuildRequires:  ant
-BuildRequires:  xml-commons-apis
+BuildRequires:  xml-commons-jaxp-1.3-apis
 %else
 BuildRequires:  junit
 %endif
@@ -482,7 +482,7 @@ perl -pi -e 's|Kaffeh|MyJavah|g' src/main/org/apache/tools/ant/taskdefs/optional
 
 export OPT_JAR_LIST=:
 %if %without bootstrap
-export CLASSPATH=$(build-classpath xerces-j2 xml-commons-apis antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver)
+export CLASSPATH=$(build-classpath xerces-j2 xml-commons-jaxp-1.3-apis antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver12)
 %{ant} jars
 %if %{build_javadoc}
 %{ant} javadocs
@@ -558,7 +558,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/ant.d
 %if %without bootstrap
 echo "antlr ant/ant-antlr" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/antlr
 echo "bsf ant/ant-apache-bsf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bsf
-echo "xml-commons-resolver ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
+echo "xml-commons-resolver12 ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
 echo "jakarta-commons-logging ant/ant-commons-logging" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-logging
 echo "jakarta-commons-net ant/ant-commons-net" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-net
 echo "bcel ant/ant-apache-bcel" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bcel
