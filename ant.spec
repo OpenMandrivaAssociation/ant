@@ -424,7 +424,7 @@ Summary:        Additional scripts for %{name}
 Group:          Development/Java
 AutoReqProv:    no
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       /usr/bin/perl
+Requires:       perl-base
 Requires:       /usr/bin/python
 
 %description scripts
