@@ -1,6 +1,5 @@
 %bcond_with                  bootstrap
 
-%define jpprelease           1jpp
 %define gcj_support          1
 %define ant_home             %{_datadir}/ant
 %define section              free
@@ -12,7 +11,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3.3
+Release:        %mkrel 3.3.4
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -52,13 +51,17 @@ BuildRequires:  xml-commons-jaxp-1.3-apis
 BuildRequires:  junit
 %endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Obsoletes:      ant-optional ant-optional-full
-# Allow subpackages to be installed from JPackage
-Provides:       ant = %{epoch}:%{version}-%{jpprelease}
+Obsoletes:      ant-optional < %{epoch}:%{version}-%{release}
+Provides:       ant-optional = %{epoch}:%{version}-%{release}
+Obsoletes:      ant-optional-full < %{epoch}:%{version}-%{release}
+Provides:       ant-optional-full = %{epoch}:%{version}-%{release}
 # RHEL3 and FC2
-Obsoletes:      %{name}-libs <= 0:1.5.2, %{name}-core <= 0:1.5.2
+Obsoletes:      %{name}-libs < %{epoch}:%{version}-%{release}, %{name}-core < %{epoch}:%{version}-%{release}
+Provides:       %{name}-libs = %{epoch}:%{version}-%{release}
+Provides:       %{name}-core = %{epoch}:%{version}-%{release}
 # Mandriva
-Conflicts:      j2sdk-ant
+Obsoletes:      j2sdk-ant < %{epoch}:%{version}-%{release}
+Provides:       j2sdk-ant = %{epoch}:%{version}-%{release}
 # libgcj aot-compiled native libraries
 %if %{gcj_support}
 Requires:       java-gcj-compat-devel
@@ -70,11 +73,12 @@ Requires:       java-devel
 BuildRequires:  java-devel
 BuildArch:      noarch
 %endif
-Obsoletes:      ant-bootstrap
-Obsoletes:      ant-jai
-Provides:       ant-jai = %{epoch}:%{version}-%{jpprelease}
-Obsoletes:      ant-manifest-only
-Provides:       ant-manifest-only = %{epoch}:%{version}-%{jpprelease}
+Obsoletes:      ant-bootstrap < %{epoch}:%{version}-%{release}
+Provides:       ant-bootstrap = %{epoch}:%{version}-%{release}
+Obsoletes:      ant-jai < %{epoch}:%{version}-%{release}
+Provides:       ant-jai = %{epoch}:%{version}-%{release}
+Obsoletes:      ant-manifest-only < %{epoch}:%{version}-%{release}
+Provides:       ant-manifest-only = %{epoch}:%{version}-%{release}
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
@@ -194,7 +198,7 @@ Requires:       bcel
 BuildRequires:  bcel
 Provides:       ant-apache-bcel = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-bcel = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-bcel
+Obsoletes:      ant-jakarta-bcel < %{epoch}:%{version}-%{release}
 Conflicts:      ant-optional-clean, ant-optional-full
 %if %{gcj_support}
 Requires(post): java-gcj-compat >= 0:1.0.31
@@ -215,7 +219,7 @@ Requires:       log4j
 BuildRequires:  log4j
 Provides:       ant-apache-log4j = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-log4j = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-log4j
+Obsoletes:      ant-jakarta-log4j < %{epoch}:%{version}-%{release}
 Conflicts:      ant-optional-clean, ant-optional-full
 %if %{gcj_support}
 Requires(post): java-gcj-compat >= 0:1.0.31
@@ -236,7 +240,7 @@ Requires:       oro
 BuildRequires:  oro
 Provides:       ant-apache-oro = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-oro = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-oro
+Obsoletes:      ant-jakarta-oro < %{epoch}:%{version}-%{release}
 Conflicts:      ant-optional-clean, ant-optional-full
 %if %{gcj_support}
 Requires(post): java-gcj-compat >= 0:1.0.31
@@ -257,7 +261,7 @@ Requires:       regexp
 BuildRequires:  regexp
 Provides:       ant-apache-regexp = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-regexp = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-regexp
+Obsoletes:      ant-jakarta-regexp < %{epoch}:%{version}-%{release}
 Conflicts:      ant-optional-clean, ant-optional-full
 %if %{gcj_support}
 Requires(post): java-gcj-compat >= 0:1.0.31
@@ -406,7 +410,8 @@ Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jaxp_transform_impl
 Provides:       ant-trax = %{epoch}:%{version}-%{release}
 # The ant-xalan jar has been merged into the ant-trax one
-Obsoletes:        ant-xalan2
+Obsoletes:      ant-xalan2 < %{epoch}:%{version}-%{release}
+Provides:       ant-xalan2 = %{epoch}:%{version}-%{release}
 Conflicts:      ant-optional-clean, ant-optional-full
 %if %{gcj_support}
 Requires(post): java-gcj-compat >= 0:1.0.31
