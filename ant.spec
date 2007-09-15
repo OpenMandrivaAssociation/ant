@@ -11,7 +11,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3.5
+Release:        %mkrel 3.3.6
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -66,15 +66,12 @@ Obsoletes:      j2sdk-ant < %{epoch}:%{version}-%{release}
 Provides:       j2sdk-ant = %{epoch}:%{version}-%{release}
 # libgcj aot-compiled native libraries
 %if %{gcj_support}
-Requires:       java-gcj-compat-devel
 BuildRequires:  java-gcj-compat-devel >= 0:1.0.31
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
 %else
-Requires:       java-devel
 BuildRequires:  java-devel
 BuildArch:      noarch
 %endif
+Requires:	java-devel
 Obsoletes:      ant-bootstrap < %{epoch}:%{version}-%{release}
 Provides:       ant-bootstrap = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-jai < %{epoch}:%{version}-%{release}
@@ -105,10 +102,6 @@ Requires:       antlr
 BuildRequires:  antlr
 Provides:       ant-antlr = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description antlr
 Optional antlr tasks for %{name}.
@@ -124,10 +117,6 @@ Requires:       bsf
 BuildRequires:  bsf
 Provides:       ant-apache-bsf = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description apache-bsf
 Optional apache bsf tasks for %{name}.
@@ -143,10 +132,6 @@ Requires:       xml-commons-resolver12
 BuildRequires:  xml-commons-resolver12
 Provides:       ant-apache-resolver = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description apache-resolver
 Optional apache resolver tasks for %{name}.
@@ -162,10 +147,6 @@ Requires:       jakarta-commons-logging
 BuildRequires:  jakarta-commons-logging
 Provides:       ant-commons-logging = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description commons-logging
 Optional commons logging tasks for %{name}.
@@ -181,10 +162,6 @@ Requires:       jakarta-commons-net
 BuildRequires:  jakarta-commons-net
 Provides:       ant-commons-net = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description commons-net
 Optional commons net tasks for %{name}.
@@ -202,10 +179,6 @@ Provides:       ant-apache-bcel = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-bcel = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-jakarta-bcel < %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description apache-bcel
 Optional apache bcel tasks for %{name}.
@@ -223,10 +196,6 @@ Provides:       ant-apache-log4j = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-log4j = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-jakarta-log4j < %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description apache-log4j
 Optional apache log4j tasks for %{name}.
@@ -244,10 +213,6 @@ Provides:       ant-apache-oro = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-oro = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-jakarta-oro < %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description apache-oro
 Optional apache oro tasks for %{name}.
@@ -265,10 +230,6 @@ Provides:       ant-apache-regexp = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-regexp = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-jakarta-regexp < %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description apache-regexp
 Optional apache regexp tasks for %{name}.
@@ -286,10 +247,6 @@ BuildRequires:  javamail >= 0:1.2-5jpp
 BuildRequires:  jaf >= 0:1.0.1-5jpp
 Provides:       ant-javamail = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description javamail
 Optional javamail tasks for %{name}.
@@ -305,10 +262,6 @@ Requires:       jdepend
 BuildRequires:  jdepend
 Provides:       ant-jdepend = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description jdepend
 Optional jdepend tasks for %{name}.
@@ -322,10 +275,6 @@ Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       ant-jmf = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description jmf
 Optional jmf tasks for %{name}.
@@ -341,10 +290,6 @@ Requires:       jsch
 BuildRequires:  jsch
 Provides:       ant-jsch = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description jsch
 Optional jsch tasks for %{name}.
@@ -360,10 +305,6 @@ Requires:       junit
 BuildRequires:  junit
 Provides:       ant-junit = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description junit
 Optional junit tasks for %{name}.
@@ -377,10 +318,6 @@ Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       ant-nodeps = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description nodeps
 Optional tasks for %{name}.
@@ -394,10 +331,6 @@ Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       ant-swing = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description swing
 Optional swing tasks for %{name}.
@@ -415,10 +348,6 @@ Provides:       ant-trax = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-xalan2 < %{epoch}:%{version}-%{release}
 Provides:       ant-xalan2 = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
-%if %{gcj_support}
-Requires(post): java-gcj-compat >= 0:1.0.31
-Requires(postun): java-gcj-compat >= 0:1.0.31
-%endif
 
 %description trax
 Optional trax tasks for %{name}.
