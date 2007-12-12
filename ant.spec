@@ -11,7 +11,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3.6
+Release:        %mkrel 3.3.7
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -35,6 +35,8 @@ Patch1:         apache-ant-1.7.0-native2ascii.patch
 # https://www.zarb.org/pipermail/jpackage-discuss/2005-September/008785.html
 # Message-ID: <432A8E37.8050101@zarb.org>
 Patch2:         apache-ant-1.7.0-javah.patch
+# Fix some places where copies of classes are included in the wrong jarfiles
+Patch4:         apache-ant-jars.patch
 Requires:       xerces-j2
 #Requires:       jaxp_parser_impl
 Requires:       jpackage-utils >= 0:1.5
@@ -403,6 +405,8 @@ Javadoc pour %{name}.
 # https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=157750
 # #157750: make the javah task work with java-gcj-compat
 %patch2 -p1
+# Fix some places where copies of classes are included in the wrong jarfiles
+%patch4 -p1
 
 # clean jar files
 %{_bindir}/find . -name "*.jar" | %{_bindir}/xargs -t %{__rm}
