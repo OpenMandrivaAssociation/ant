@@ -11,7 +11,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3.7
+Release:        %mkrel 3.3.8
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -45,7 +45,7 @@ Requires:       xml-commons-jaxp-1.3-apis
 %endif
 #BuildRequires:  jaxp_parser_impl
 BuildRequires:  xerces-j2
-BuildRequires:  jpackage-utils >= 0:1.5
+BuildRequires:  java-rpmbuild >= 0:1.5
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  xml-commons-jaxp-1.3-apis
