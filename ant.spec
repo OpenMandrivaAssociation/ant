@@ -52,6 +52,7 @@ BuildRequires:  xml-commons-jaxp-1.3-apis
 %else
 BuildRequires:  junit
 %endif
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Obsoletes:      ant-optional < %{epoch}:%{version}-%{release}
 Provides:       ant-optional = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-optional-clean < %{epoch}:%{version}-%{release}
