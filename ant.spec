@@ -11,7 +11,7 @@
 
 Name:           ant
 Version:        1.7.0
-Release:        %mkrel 3.3.8
+Release:        %mkrel 3.3.9
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -243,10 +243,10 @@ Taches apache regexp optionelles pour %{name}.
 Summary:        Optional javamail tasks for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       javamail >= 0:1.2-5jpp
-Requires:       jaf >= 0:1.0.1-5jpp
-BuildRequires:  javamail >= 0:1.2-5jpp
-BuildRequires:  jaf >= 0:1.0.1-5jpp
+Requires:       geronimo-javamail-1.3.1-api
+Requires:       geronimo-jaf-1.0.2-api
+BuildRequires:  geronimo-javamail-1.3.1-api
+BuildRequires:  geronimo-jaf-1.0.2-api
 Provides:       ant-javamail = %{epoch}:%{version}-%{release}
 #Conflicts:      ant-optional-clean, ant-optional-full
 
