@@ -37,10 +37,11 @@ Patch1:         apache-ant-1.7.0-native2ascii.patch
 Patch2:         apache-ant-1.7.0-javah.patch
 # Fix some places where copies of classes are included in the wrong jarfiles
 Patch4:         apache-ant-jars.patch
-Requires:       xerces-j2
+#Requires:       xerces-j2
 #Requires:       jaxp_parser_impl
 Requires:       jpackage-utils >= 0:1.5
 %if %without bootstrap
+Requires:       xerces-j2
 Requires:       xml-commons-jaxp-1.3-apis
 %endif
 #BuildRequires:  jaxp_parser_impl
