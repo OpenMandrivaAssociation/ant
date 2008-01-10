@@ -1,4 +1,4 @@
-%bcond_with                  bootstrap
+%bcond_without bootstrap
 
 %define gcj_support          1
 %define ant_home             %{_datadir}/ant
@@ -44,11 +44,12 @@ Requires:       jpackage-utils >= 0:1.5
 Requires:       xml-commons-jaxp-1.3-apis
 %endif
 #BuildRequires:  jaxp_parser_impl
-BuildRequires:  xerces-j2
+#BuildRequires:  xerces-j2
 BuildRequires:  java-rpmbuild >= 0:1.5
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  xml-commons-jaxp-1.3-apis
+BuildRequires:  xerces-j2
 %else
 BuildRequires:  junit
 %endif
