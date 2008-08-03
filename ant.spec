@@ -97,7 +97,7 @@ Patch2:         apache-ant-gnu-classpath.patch
 Patch3:         apache-ant-no-test-jar.patch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
-BuildRequires:  java-devel >= 0:1.5.0
+BuildRequires:  java-rpmbuild
 BuildRequires:  jaxp_transform_impl
 %if %without bootstrap
 BuildRequires:  ant
