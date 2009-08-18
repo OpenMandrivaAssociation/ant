@@ -41,8 +41,8 @@
 %define build_javadoc        1
 %endif
 
-%define _with_gcj_support 1
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
+%define _with_gcj_support 0
+%define gcj_support 0
 
 %define with_manifest_only 0
 
@@ -54,7 +54,7 @@
 
 Name:           ant
 Version:        1.7.1
-Release:        %mkrel 7.0.3
+Release:        %mkrel 7.0.4
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -98,19 +98,14 @@ Patch3:         apache-ant-no-test-jar.patch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
 BuildRequires:  java-rpmbuild
-BuildRequires:  jaxp_transform_impl
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  junit
-BuildRequires:  xml-commons-jaxp-1.3-apis
-BuildRequires:  xerces-j2
 %endif
 
 Requires:       jpackage-utils >= 0:1.7.5
-Requires:       java-devel >= 0:1.5.0
+Requires:       java-devel >= 0:1.6.0
 %if %without bootstrap
-Requires:       xerces-j2
-Requires:       xml-commons-jaxp-1.3-apis
 %endif
 
 %if ! %{gcj_support}
@@ -194,7 +189,7 @@ Taches swing optionelles pour %{name}.
 Summary:        Optional trax tasks for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       jaxp_transform_impl
+Requires:       java >= 0:1.6
 Provides:       ant-trax = %{epoch}:%{version}-%{release}
 # The ant-xalan jar has been merged into the ant-trax one
 Obsoletes:	ant-xalan2 < %{epoch}:%{version}-%{release}
@@ -498,7 +493,7 @@ find . -name "*.jar" | %{_bindir}/xargs -t rm
 %build
 export OPT_JAR_LIST=:
 %if %without bootstrap
-export CLASSPATH=$(build-classpath xerces-j2 xml-commons-jaxp-1.3-apis antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver12)
+export CLASSPATH=$(build-classpath antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver12)
 %{ant} jars
 %if %{build_javadoc}
 %{ant} javadocs
