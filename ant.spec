@@ -54,7 +54,7 @@
 
 Name:           ant
 Version:        1.7.1
-Release:        %mkrel 7.0.4
+Release:        %mkrel 7.0.5
 Epoch:          0
 Summary:        Ant build tool for java
 Summary(it):    Tool per la compilazione di programmi java
