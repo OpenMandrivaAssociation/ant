@@ -57,7 +57,7 @@ Summary(it):    Tool per la compilazione di programmi java
 Summary(fr):    Outil de compilation pour java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
-Group:          Development/Tools
+Group:          Development/Java
 Source0:        http://www.apache.org/dist/ant/source/apache-ant-%{cvs_version}-src.tar.bz2
 Source2:        apache-ant-%{major_version}.ant.conf
 
@@ -86,26 +86,19 @@ Requires:       xml-commons-jaxp-1.3-apis
 
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-Obsoletes:      ant-optional < %{epoch}:%{version}-%{release}
-Provides:       ant-optional = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-optional-full < %{epoch}:%{version}-%{release}
-Provides:       ant-optional-full = %{epoch}:%{version}-%{release}
+%rename		ant-optional
+%rename		ant-optional-full
 # Allow subpackages not in RHEL to be installed from JPackage
-Provides:       %{name} = %{epoch}:%{version}-%{release}
+Provides:       %{name} = %{EVRD}
 # RHUG
-Obsoletes:      ant-devel < %{epoch}:%{version}-%{release}
-Provides:       ant-devel = %{epoch}:%{version}-%{release}
+%rename		ant-devel
 # Mandriva
 Conflicts:      j2sdk-ant
 # RHEL3 and FC2
-Obsoletes:      %{name}-libs < %{epoch}:%{version}-%{release}
-Provides:       %{name}-libs = %{epoch}:%{version}-%{release}
-Obsoletes:      %{name}-core < %{epoch}:%{version}-%{release}
-Provides:       %{name}-core = %{epoch}:%{version}-%{release}
-Obsoletes:       %{name}-nodeps < %{epoch}:%{version}-%{release}
-Provides:       %{name}-nodeps = %{epoch}:%{version}-%{release}
-Obsoletes:      %{name}-trax < %{epoch}:%{version}-%{release}
-Provides:       %{name}-trax = %{epoch}:%{version}-%{release}
+%rename		%{name}-libs
+%rename		%{name}-core
+%rename		%{name}-nodeps
+%rename		%{name}-trax
 
 Requires(post):   jpackage-utils >= 0:1.7.5
 Requires(postun): jpackage-utils >= 0:1.7.5
@@ -127,10 +120,10 @@ apache xml.
 
 %package jmf
 Summary:        Optional jmf tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       %{name}-nodeps = %{epoch}:%{version}-%{release}
-Provides:       ant-jmf = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
+Requires:       %{name}-nodeps = %{EVRD}
+Provides:       ant-jmf = %{EVRD}
 
 %description jmf
 Optional jmf tasks for %{name}.
@@ -140,9 +133,9 @@ Taches jmf optionelles pour %{name}.
 
 %package swing
 Summary:        Optional swing tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Provides:       ant-swing = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
+Provides:       ant-swing = %{EVRD}
 
 %description swing
 Optional swing tasks for %{name}.
@@ -154,16 +147,16 @@ Taches swing optionelles pour %{name}.
 %if %{with_manifest_only}
 %package manifest-only
 Summary:        Manifest-only jars for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Provides:       %{name}-icontract = %{epoch}:%{version}-%{release}
-Provides:       %{name}-netrexx = %{epoch}:%{version}-%{release}
-Provides:       %{name}-starteam = %{epoch}:%{version}-%{release}
-Provides:       %{name}-stylebook = %{epoch}:%{version}-%{release}
-Provides:       %{name}-vaj = %{epoch}:%{version}-%{release}
-Provides:       %{name}-weblogic = %{epoch}:%{version}-%{release}
-Provides:       %{name}-xalan1 = %{epoch}:%{version}-%{release}
-Provides:       %{name}-xslp = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
+Provides:       %{name}-icontract = %{EVRD}
+Provides:       %{name}-netrexx = %{EVRD}
+Provides:       %{name}-starteam = %{EVRD}
+Provides:       %{name}-stylebook = %{EVRD}
+Provides:       %{name}-vaj = %{EVRD}
+Provides:       %{name}-weblogic = %{EVRD}
+Provides:       %{name}-xalan1 = %{EVRD}
+Provides:       %{name}-xslp = %{EVRD}
 
 %description  manifest-only
 Manifest-only jars for %{name}.
@@ -171,11 +164,11 @@ Manifest-only jars for %{name}.
 
 %package antlr
 Summary:        Optional antlr tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       antlr
 BuildRequires:  antlr
-Provides:       ant-antlr = %{epoch}:%{version}-%{release}
+Provides:       ant-antlr = %{EVRD}
 
 %description antlr
 Optional antlr tasks for %{name}.
@@ -185,11 +178,11 @@ Taches antlr optionelles pour %{name}.
 
 %package apache-bsf
 Summary:        Optional apache bsf tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       bsf
 BuildRequires:  bsf
-Provides:       ant-apache-bsf = %{epoch}:%{version}-%{release}
+Provides:       ant-apache-bsf = %{EVRD}
 
 %description apache-bsf
 Optional apache bsf tasks for %{name}.
@@ -199,11 +192,11 @@ Taches apache bsf optionelles pour %{name}.
 
 %package apache-resolver
 Summary:        Optional apache resolver tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       xml-commons-resolver
 BuildRequires:  xml-commons-resolver
-Provides:       ant-apache-resolver = %{epoch}:%{version}-%{release}
+Provides:       ant-apache-resolver = %{EVRD}
 
 %description apache-resolver
 Optional apache resolver tasks for %{name}.
@@ -213,11 +206,11 @@ Taches apache resolver optionelles pour %{name}.
 
 %package commons-logging
 Summary:        Optional commons logging tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       jakarta-commons-logging
 BuildRequires:  jakarta-commons-logging
-Provides:       ant-commons-logging = %{epoch}:%{version}-%{release}
+Provides:       ant-commons-logging = %{EVRD}
 
 %description commons-logging
 Optional commons logging tasks for %{name}.
@@ -227,11 +220,11 @@ Taches commons logging optionelles pour %{name}.
 
 %package commons-net
 Summary:        Optional commons net tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       jakarta-commons-net
 BuildRequires:  jakarta-commons-net
-Provides:       ant-commons-net = %{epoch}:%{version}-%{release}
+Provides:       ant-commons-net = %{EVRD}
 
 %description commons-net
 Optional commons net tasks for %{name}.
@@ -243,11 +236,11 @@ Taches commons net optionelles pour %{name}.
 %if 0
 %package jai
 Summary:        Optional jai tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       jai
 BuildRequires:  jai
-Provides:       ant-jai = %{epoch}:%{version}-%{release}
+Provides:       ant-jai = %{EVRD}
 
 %description jai
 Optional jai tasks for %{name}.
@@ -258,13 +251,13 @@ Taches jai optionelles pour %{name}.
 
 %package apache-bcel
 Summary:        Optional apache bcel tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       bcel
 BuildRequires:  bcel
-Provides:       ant-apache-bcel = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-bcel = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-bcel < %{epoch}:%{version}-%{release}
+Provides:       ant-apache-bcel = %{EVRD}
+Provides:       ant-jakarta-bcel = %{EVRD}
+Obsoletes:      ant-jakarta-bcel < %{EVRD}
 
 %description apache-bcel
 Optional apache bcel tasks for %{name}.
@@ -274,13 +267,13 @@ Taches apache bcel optionelles pour %{name}.
 
 %package apache-log4j
 Summary:        Optional apache log4j tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       log4j
 BuildRequires:  log4j
-Provides:       ant-apache-log4j = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-log4j = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-log4j < %{epoch}:%{version}-%{release}
+Provides:       ant-apache-log4j = %{EVRD}
+Provides:       ant-jakarta-log4j = %{EVRD}
+Obsoletes:      ant-jakarta-log4j < %{EVRD}
 
 %description apache-log4j
 Optional apache log4j tasks for %{name}.
@@ -290,13 +283,13 @@ Taches apache log4j optionelles pour %{name}.
 
 %package apache-oro
 Summary:        Optional apache oro tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       jakarta-oro
 BuildRequires:  jakarta-oro
-Provides:       ant-apache-oro = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-oro = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-oro < %{epoch}:%{version}-%{release}
+Provides:       ant-apache-oro = %{EVRD}
+Provides:       ant-jakarta-oro = %{EVRD}
+Obsoletes:      ant-jakarta-oro < %{EVRD}
 
 %description apache-oro
 Optional apache oro tasks for %{name}.
@@ -306,13 +299,13 @@ Taches apache oro optionelles pour %{name}.
 
 %package apache-regexp
 Summary:        Optional apache regexp tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       regexp
 BuildRequires:  regexp
-Provides:       ant-apache-regexp = %{epoch}:%{version}-%{release}
-Provides:       ant-jakarta-regexp = %{epoch}:%{version}-%{release}
-Obsoletes:      ant-jakarta-regexp < %{epoch}:%{version}-%{release}
+Provides:       ant-apache-regexp = %{EVRD}
+Provides:       ant-jakarta-regexp = %{EVRD}
+Obsoletes:      ant-jakarta-regexp < %{EVRD}
 
 %description apache-regexp
 Optional apache regexp tasks for %{name}.
@@ -322,11 +315,11 @@ Taches apache regexp optionelles pour %{name}.
 
 %package apache-xalan2
 Summary:        Optional apache xalan2 tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       regexp
 BuildRequires:  regexp
-Provides:       ant-apache-xalan2 = %{epoch}:%{version}-%{release}
+Provides:       ant-apache-xalan2 = %{EVRD}
 
 %description apache-xalan2
 Optional apache xalan2 tasks for %{name}.
@@ -336,11 +329,11 @@ Taches apache xalan2 optionelles pour %{name}.
 
 %package javamail
 Summary:        Optional javamail tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       javamail >= 0:1.2-5jpp
 BuildRequires:  javamail >= 0:1.2-5jpp
-Provides:       ant-javamail = %{epoch}:%{version}-%{release}
+Provides:       ant-javamail = %{EVRD}
 
 %description javamail
 Optional javamail tasks for %{name}.
@@ -350,11 +343,11 @@ Taches javamail optionelles pour %{name}.
 
 %package jdepend
 Summary:        Optional jdepend tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       jdepend
 BuildRequires:  jdepend
-Provides:       ant-jdepend = %{epoch}:%{version}-%{release}
+Provides:       ant-jdepend = %{EVRD}
 
 %description jdepend
 Optional jdepend tasks for %{name}.
@@ -364,11 +357,11 @@ Taches jdepend optionelles pour %{name}.
 
 %package jsch
 Summary:        Optional jsch tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       jsch
 BuildRequires:  jsch
-Provides:       ant-jsch = %{epoch}:%{version}-%{release}
+Provides:       ant-jsch = %{EVRD}
 
 %description jsch
 Optional jsch tasks for %{name}.
@@ -378,11 +371,11 @@ Taches jsch optionelles pour %{name}.
 
 %package junit
 Summary:        Optional junit tasks for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       junit
 Requires:       xalan-j2
-Provides:       ant-junit = %{epoch}:%{version}-%{release}
+Provides:       ant-junit = %{EVRD}
 
 %description junit
 Optional junit tasks for %{name}.
@@ -392,21 +385,21 @@ Taches junit optionelles pour %{name}.
 
 %package testutil
 Summary:        Test utility classes for %{name}
-Group:          Development/Tools
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Group:          Development/Java
+Requires:       %{name} = %{EVRD}
 Requires:       junit
-Provides:       ant-testutil = %{epoch}:%{version}-%{release}
+Provides:       ant-testutil = %{EVRD}
 
 %description testutil
 Test utility tasks for %{name}.
 
 %package scripts
 Summary:        Additional scripts for %{name}
-Group:          Development/Tools
+Group:          Development/Java
 AutoReqProv:    no
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       %{_bindir}/perl
-Requires:       %{_bindir}/python
+Requires:       %{name} = %{EVRD}
+Requires:       perl
+Requires:       python(abi)
 
 %description scripts
 Additional Perl and Python scripts for %{name}.
@@ -416,7 +409,7 @@ Scripts additionels pour %{name}.
 
 %package manual
 Summary:        Manual for %{name}
-Group:          Development/Tools
+Group:          Development/Java
 
 %description manual
 Documentation for %{name}.
