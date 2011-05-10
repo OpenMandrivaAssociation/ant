@@ -36,90 +36,64 @@
 %bcond_with bootstrap
 
 %if %with bootstrap
-%define build_javadoc        0
+%global build_javadoc        0
 %else
-%define build_javadoc        1
+%global build_javadoc        1
 %endif
 
-%define _with_gcj_support 0
-%define gcj_support 0
+%global with_manifest_only 0
 
-%define with_manifest_only 0
+%global ant_home %{_datadir}/ant
 
-%define ant_home %{_datadir}/ant
-%define section  free
-
-%define major_version 1.7
-%define cvs_version 1.7.1
+%global major_version 1.8
+%global cvs_version 1.8.2
 
 Name:           ant
-Version:        1.7.1
-Release:        %mkrel 7.0.7
+Version:        1.8.2
+Release:        5
 Epoch:          0
-Summary:        Ant build tool for java
+Summary:        Build tool for java
 Summary(it):    Tool per la compilazione di programmi java
 Summary(fr):    Outil de compilation pour java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
-Group:          Development/Java
+Group:          Development/Tools
 Source0:        http://www.apache.org/dist/ant/source/apache-ant-%{cvs_version}-src.tar.bz2
 Source2:        apache-ant-%{major_version}.ant.conf
-Source1:        http://repo1.maven.org/maven2/org/apache/ant/ant/1.7.1/ant-1.7.1.pom
-Source3:        http://repo1.maven.org/maven2/org/apache/ant/ant-launcher/1.7.1/ant-launcher-1.7.1.pom
-Source4:        http://repo1.maven.org/maven2/org/apache/ant/ant-netrexx/1.7.1/ant-netrexx-1.7.1.pom
-Source5:        http://repo1.maven.org/maven2/org/apache/ant/ant-starteam/1.7.1/ant-starteam-1.7.1.pom
-Source6:        http://repo1.maven.org/maven2/org/apache/ant/ant-stylebook/1.7.1/ant-stylebook-1.7.1.pom
-Source7:        http://repo1.maven.org/maven2/org/apache/ant/ant-weblogic/1.7.1/ant-weblogic-1.7.1.pom
-Source8:        http://repo1.maven.org/maven2/org/apache/ant/ant-antlr/1.7.1/ant-antlr-1.7.1.pom
-Source9:        http://repo1.maven.org/maven2/org/apache/ant/ant-apache-bsf/1.7.1/ant-apache-bsf-1.7.1.pom
-Source10:       http://repo1.maven.org/maven2/org/apache/ant/ant-apache-resolver/1.7.1/ant-apache-resolver-1.7.1.pom
-Source11:       http://repo1.maven.org/maven2/org/apache/ant/ant-commons-logging/1.7.1/ant-commons-logging-1.7.1.pom
-Source12:       http://repo1.maven.org/maven2/org/apache/ant/ant-commons-net/1.7.1/ant-commons-net-1.7.1.pom
-#Source13:       http://repo1.maven.org/maven2/org/apache/ant/ant-jai/1.7.1/ant-jai-1.7.1.pom
-Source14:       http://repo1.maven.org/maven2/org/apache/ant/ant-apache-bcel/1.7.1/ant-apache-bcel-1.7.1.pom
-Source15:       http://repo1.maven.org/maven2/org/apache/ant/ant-apache-log4j/1.7.1/ant-apache-log4j-1.7.1.pom
-Source16:       http://repo1.maven.org/maven2/org/apache/ant/ant-apache-oro/1.7.1/ant-apache-oro-1.7.1.pom
-Source17:       http://repo1.maven.org/maven2/org/apache/ant/ant-apache-regexp/1.7.1/ant-apache-regexp-1.7.1.pom
-Source18:       http://repo1.maven.org/maven2/org/apache/ant/ant-javamail/1.7.1/ant-javamail-1.7.1.pom
-Source19:       http://repo1.maven.org/maven2/org/apache/ant/ant-jdepend/1.7.1/ant-jdepend-1.7.1.pom
-Source20:       http://repo1.maven.org/maven2/org/apache/ant/ant-jmf/1.7.1/ant-jmf-1.7.1.pom
-Source21:       http://repo1.maven.org/maven2/org/apache/ant/ant-jsch/1.7.1/ant-jsch-1.7.1.pom
-Source22:       http://repo1.maven.org/maven2/org/apache/ant/ant-junit/1.7.1/ant-junit-1.7.1.pom
-Source23:       http://repo1.maven.org/maven2/org/apache/ant/ant-nodeps/1.7.1/ant-nodeps-1.7.1.pom
-Source24:       http://repo1.maven.org/maven2/org/apache/ant/ant-swing/1.7.1/ant-swing-1.7.1.pom
-Source25:       http://repo1.maven.org/maven2/org/apache/ant/ant-trax/1.7.1/ant-trax-1.7.1.pom
-Source26:       http://repo1.maven.org/maven2/org/apache/ant/ant-parent/1.7.1/ant-parent-1.7.1.pom
 
 # Fix some places where copies of classes are included in the wrong jarfiles
-Patch0:         apache-ant-jars.patch
 Patch1:         apache-ant-bz163689.patch
-Patch2:         apache-ant-gnu-classpath.patch
 Patch3:         apache-ant-no-test-jar.patch
+Patch4:         apache-ant-class-path-in-manifest.patch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
-BuildRequires:  java-rpmbuild
+BuildRequires:  java-devel >= 0:1.5.0
+BuildRequires:  jaxp_transform_impl
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  junit
+BuildRequires:  xml-commons-jaxp-1.3-apis
+BuildRequires:  xalan-j2
+BuildRequires:  xerces-j2
 %endif
 
 Requires:       jpackage-utils >= 0:1.7.5
-Requires:       java-devel >= 0:1.6.0
+Requires:       java-devel >= 0:1.5.0
 %if %without bootstrap
+Requires:       xerces-j2
+Requires:       xml-commons-jaxp-1.3-apis
 %endif
 
-%if ! %{gcj_support}
 BuildArch:      noarch
-%endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-Obsoletes:	ant-optional < %{epoch}:%{version}-%{release}
+Obsoletes:      ant-optional < %{epoch}:%{version}-%{release}
 Provides:       ant-optional = %{epoch}:%{version}-%{release}
 Obsoletes:      ant-optional-full < %{epoch}:%{version}-%{release}
 Provides:       ant-optional-full = %{epoch}:%{version}-%{release}
 # Allow subpackages not in RHEL to be installed from JPackage
-Provides:	%{name} = %{epoch}:%{version}-%{release}
+Provides:       %{name} = %{epoch}:%{version}-%{release}
 # RHUG
-Obsoletes:	ant-devel < %{epoch}:%{version}-%{release}
+Obsoletes:      ant-devel < %{epoch}:%{version}-%{release}
 Provides:       ant-devel = %{epoch}:%{version}-%{release}
 # Mandriva
 Conflicts:      j2sdk-ant
@@ -128,12 +102,14 @@ Obsoletes:      %{name}-libs < %{epoch}:%{version}-%{release}
 Provides:       %{name}-libs = %{epoch}:%{version}-%{release}
 Obsoletes:      %{name}-core < %{epoch}:%{version}-%{release}
 Provides:       %{name}-core = %{epoch}:%{version}-%{release}
-%if %{gcj_support}
-BuildRequires:		java-gcj-compat-devel
-%endif
+Obsoletes:       %{name}-nodeps < %{epoch}:%{version}-%{release}
+Provides:       %{name}-nodeps = %{epoch}:%{version}-%{release}
+Obsoletes:      %{name}-trax < %{epoch}:%{version}-%{release}
+Provides:       %{name}-trax = %{epoch}:%{version}-%{release}
 
 Requires(post):   jpackage-utils >= 0:1.7.5
 Requires(postun): jpackage-utils >= 0:1.7.5
+
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
@@ -151,8 +127,9 @@ apache xml.
 
 %package jmf
 Summary:        Optional jmf tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       %{name}-nodeps = %{epoch}:%{version}-%{release}
 Provides:       ant-jmf = %{epoch}:%{version}-%{release}
 
 %description jmf
@@ -161,21 +138,9 @@ Optional jmf tasks for %{name}.
 %description jmf -l fr
 Taches jmf optionelles pour %{name}.
 
-%package nodeps
-Summary:        Optional tasks for %{name}
-Group:          Development/Java
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Provides:       ant-nodeps = %{epoch}:%{version}-%{release}
-
-%description nodeps
-Optional tasks for %{name}.
-
-%description nodeps -l fr
-Taches optionelles pour %{name}.
-
 %package swing
 Summary:        Optional swing tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       ant-swing = %{epoch}:%{version}-%{release}
 
@@ -185,27 +150,11 @@ Optional swing tasks for %{name}.
 %description swing -l fr
 Taches swing optionelles pour %{name}.
 
-%package trax
-Summary:        Optional trax tasks for %{name}
-Group:          Development/Java
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       java >= 0:1.6
-Provides:       ant-trax = %{epoch}:%{version}-%{release}
-# The ant-xalan jar has been merged into the ant-trax one
-Obsoletes:	ant-xalan2 < %{epoch}:%{version}-%{release}
-Provides:       ant-xalan2 = %{epoch}:%{version}-%{release}
-
-%description trax
-Optional trax tasks for %{name}.
-
-%description trax -l fr
-Taches trax optionelles pour %{name}.
-
 %if %without bootstrap
 %if %{with_manifest_only}
 %package manifest-only
 Summary:        Manifest-only jars for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Provides:       %{name}-icontract = %{epoch}:%{version}-%{release}
 Provides:       %{name}-netrexx = %{epoch}:%{version}-%{release}
@@ -222,7 +171,7 @@ Manifest-only jars for %{name}.
 
 %package antlr
 Summary:        Optional antlr tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       antlr
 BuildRequires:  antlr
@@ -236,7 +185,7 @@ Taches antlr optionelles pour %{name}.
 
 %package apache-bsf
 Summary:        Optional apache bsf tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       bsf
 BuildRequires:  bsf
@@ -250,10 +199,10 @@ Taches apache bsf optionelles pour %{name}.
 
 %package apache-resolver
 Summary:        Optional apache resolver tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       xml-commons-resolver12
-BuildRequires:  xml-commons-resolver12
+Requires:       xml-commons-resolver
+BuildRequires:  xml-commons-resolver
 Provides:       ant-apache-resolver = %{epoch}:%{version}-%{release}
 
 %description apache-resolver
@@ -264,7 +213,7 @@ Taches apache resolver optionelles pour %{name}.
 
 %package commons-logging
 Summary:        Optional commons logging tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jakarta-commons-logging
 BuildRequires:  jakarta-commons-logging
@@ -278,7 +227,7 @@ Taches commons logging optionelles pour %{name}.
 
 %package commons-net
 Summary:        Optional commons net tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jakarta-commons-net
 BuildRequires:  jakarta-commons-net
@@ -294,7 +243,7 @@ Taches commons net optionelles pour %{name}.
 %if 0
 %package jai
 Summary:        Optional jai tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jai
 BuildRequires:  jai
@@ -309,13 +258,13 @@ Taches jai optionelles pour %{name}.
 
 %package apache-bcel
 Summary:        Optional apache bcel tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       bcel
 BuildRequires:  bcel
 Provides:       ant-apache-bcel = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-bcel = %{epoch}:%{version}-%{release}
-Obsoletes:	ant-jakarta-bcel < %{epoch}:%{version}-%{release}
+Obsoletes:      ant-jakarta-bcel < %{epoch}:%{version}-%{release}
 
 %description apache-bcel
 Optional apache bcel tasks for %{name}.
@@ -325,13 +274,13 @@ Taches apache bcel optionelles pour %{name}.
 
 %package apache-log4j
 Summary:        Optional apache log4j tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       log4j
 BuildRequires:  log4j
 Provides:       ant-apache-log4j = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-log4j = %{epoch}:%{version}-%{release}
-Obsoletes:	ant-jakarta-log4j < %{epoch}:%{version}-%{release}
+Obsoletes:      ant-jakarta-log4j < %{epoch}:%{version}-%{release}
 
 %description apache-log4j
 Optional apache log4j tasks for %{name}.
@@ -341,13 +290,13 @@ Taches apache log4j optionelles pour %{name}.
 
 %package apache-oro
 Summary:        Optional apache oro tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       oro
-BuildRequires:  oro
+Requires:       jakarta-oro
+BuildRequires:  jakarta-oro
 Provides:       ant-apache-oro = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-oro = %{epoch}:%{version}-%{release}
-Obsoletes:	ant-jakarta-oro < %{epoch}:%{version}-%{release}
+Obsoletes:      ant-jakarta-oro < %{epoch}:%{version}-%{release}
 
 %description apache-oro
 Optional apache oro tasks for %{name}.
@@ -357,13 +306,13 @@ Taches apache oro optionelles pour %{name}.
 
 %package apache-regexp
 Summary:        Optional apache regexp tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       regexp
 BuildRequires:  regexp
 Provides:       ant-apache-regexp = %{epoch}:%{version}-%{release}
 Provides:       ant-jakarta-regexp = %{epoch}:%{version}-%{release}
-Obsoletes:	ant-jakarta-regexp < %{epoch}:%{version}-%{release}
+Obsoletes:      ant-jakarta-regexp < %{epoch}:%{version}-%{release}
 
 %description apache-regexp
 Optional apache regexp tasks for %{name}.
@@ -371,14 +320,26 @@ Optional apache regexp tasks for %{name}.
 %description apache-regexp -l fr
 Taches apache regexp optionelles pour %{name}.
 
+%package apache-xalan2
+Summary:        Optional apache xalan2 tasks for %{name}
+Group:          Development/Tools
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       regexp
+BuildRequires:  regexp
+Provides:       ant-apache-xalan2 = %{epoch}:%{version}-%{release}
+
+%description apache-xalan2
+Optional apache xalan2 tasks for %{name}.
+
+%description apache-xalan2 -l fr
+Taches apache xalan2 optionelles pour %{name}.
+
 %package javamail
 Summary:        Optional javamail tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       javamail >= 0:1.2-5jpp
-Requires:       jaf >= 0:1.0.1-5jpp
 BuildRequires:  javamail >= 0:1.2-5jpp
-BuildRequires:  jaf >= 0:1.0.1-5jpp
 Provides:       ant-javamail = %{epoch}:%{version}-%{release}
 
 %description javamail
@@ -389,7 +350,7 @@ Taches javamail optionelles pour %{name}.
 
 %package jdepend
 Summary:        Optional jdepend tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jdepend
 BuildRequires:  jdepend
@@ -403,7 +364,7 @@ Taches jdepend optionelles pour %{name}.
 
 %package jsch
 Summary:        Optional jsch tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       jsch
 BuildRequires:  jsch
@@ -417,9 +378,10 @@ Taches jsch optionelles pour %{name}.
 
 %package junit
 Summary:        Optional junit tasks for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       junit
+Requires:       xalan-j2
 Provides:       ant-junit = %{epoch}:%{version}-%{release}
 
 %description junit
@@ -428,9 +390,19 @@ Optional junit tasks for %{name}.
 %description junit -l fr
 Taches junit optionelles pour %{name}.
 
+%package testutil
+Summary:        Test utility classes for %{name}
+Group:          Development/Tools
+Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       junit
+Provides:       ant-testutil = %{epoch}:%{version}-%{release}
+
+%description testutil
+Test utility tasks for %{name}.
+
 %package scripts
 Summary:        Additional scripts for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 AutoReqProv:    no
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       %{_bindir}/perl
@@ -444,7 +416,7 @@ Scripts additionels pour %{name}.
 
 %package manual
 Summary:        Manual for %{name}
-Group:          Development/Java
+Group:          Development/Tools
 
 %description manual
 Documentation for %{name}.
@@ -457,7 +429,7 @@ Documentation pour %{name}.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Development/Java
+Group:          Documentation
 
 %description javadoc
 Javadoc for %{name}.
@@ -470,32 +442,60 @@ Javadoc pour %{name}.
 
 %prep
 %setup -q -n apache-ant-%{cvs_version}
-
-# Fix some places where copies of classes are included in the wrong jarfiles
-%patch0 -p1
-
+#Fixup version
+find -name build.xml -o -name pom.xml | xargs sed -i -e s/-SNAPSHOT//
+#https://issues.apache.org/bugzilla/show_bug.cgi?id=47669
+sed -i -e "s|IMAGE_FILE_TYPE|BINARY_FILE_TYPE|g" src/main/org/apache/tools/ant/taskdefs/optional/net/FTP.java
 # Disable the style and xmlvalidate tasks on ppc64 and s390x (#163689).
 %ifarch ppc64 s390x
 %patch1 -p1
 %endif
 
-# Update ant to work with recent versions of GNU Classpath
-%patch2 -p1
-
 # When bootstrapping, we don't have junit
 %patch3 -p1
 
+# Fix class-path-in-manifest rpmlint warning
+%patch4
+
 # clean jar files
 find . -name "*.jar" | %{_bindir}/xargs -t rm
+
+#install jars
+%if %without bootstrap
+build-jar-repository -s -p lib/optional xerces-j2 xml-commons-jaxp-1.3-apis antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
+%endif
+
+# Fix file-not-utf8 rpmlint warning
+iconv KEYS -f iso-8859-1 -t utf-8 -o KEYS.utf8
+mv KEYS.utf8 KEYS
+iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
+mv LICENSE.utf8 LICENSE
+
+# Provides: exclude perl(oata), perl(examples)
+cat <<__EOF__ > %{name}-perl.prov
+#!/bin/sh
+/usr/lib/rpm/perl.prov \$* | grep -v '^perl(oata)$' | grep -v '^perl(examples)$'
+__EOF__
+%define __perl_provides %{_builddir}/apache-ant-%{cvs_version}/%{name}-perl.prov
+chmod +x %{__perl_provides}
+
+
+# Requires: exclude bogus perl(the)
+cat <<__EOF__ > %{name}-perl.req
+#!/bin/sh
+/usr/lib/rpm/perl.req \$* | grep -v '^perl(the)$'
+__EOF__
+%define __perl_requires %{_builddir}/apache-ant-%{cvs_version}/%{name}-perl.req
+chmod +x %{__perl_requires}
 
 # -----------------------------------------------------------------------------
 
 %build
 export OPT_JAR_LIST=:
 %if %without bootstrap
-export CLASSPATH=$(build-classpath antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xml-commons-resolver12)
-%{ant} jars
+%{ant} jars test-jar
 %if %{build_javadoc}
+export CLASSPATH=$(build-classpath xerces-j2 xml-commons-jaxp-1.3-apis antlr bcel jaf javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
 %{ant} javadocs
 %endif
 %else
@@ -513,103 +513,46 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{ant_home}/{lib,etc}
 
 # jars
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
-install -m 644 build/lib/ant.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-install -m 644 build/lib/ant-bootstrap.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-bootstrap-%{version}.jar
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}.pom
-%add_to_maven_depmap org.apache.ant %{name} %{version} JPP %{name}
-install -m 644 build/lib/ant-launcher.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-launcher-%{version}.jar
-install -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}-launcher.pom
-%add_to_maven_depmap org.apache.ant %{name}-launcher %{version} JPP %{name}-launcher
 
-install -m 644 build/lib/ant-jmf.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jmf-%{version}.jar
-install -m 644 %{SOURCE20} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-jmf.pom
-%add_to_maven_depmap org.apache.ant %{name}-jmf %{version} JPP/%{name} %{name}-jmf
-install -m 644 build/lib/ant-nodeps.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-nodeps-%{version}.jar
-install -m 644 %{SOURCE23} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-nodeps.pom
-%add_to_maven_depmap org.apache.ant %{name}-nodeps %{version} JPP/%{name} %{name}-nodeps
-install -m 644 build/lib/ant-swing.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-swing-%{version}.jar
-install -m 644 %{SOURCE24} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-swing.pom
-%add_to_maven_depmap org.apache.ant %{name}-swing %{version} JPP/%{name} %{name}-swing
-install -m 644 build/lib/ant-trax.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-trax-%{version}.jar
-install -m 644 %{SOURCE25} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-trax.pom
-%add_to_maven_depmap org.apache.ant %{name}-trax %{version} JPP/%{name} %{name}-trax
+for jar in build/lib/*.jar
+do
+  jarname=$(basename $jar .jar)
+  pomname="JPP.%{name}-${jarname}.pom"
 
-# optional jars
-%if %without bootstrap
-%if %{with_manifest_only}
-install -m 644 build/lib/ant-icontract.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-icontract-%{version}.jar
-install -m 644 build/lib/ant-netrexx.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-netrexx-%{version}.jar
-install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-netrexx.pom
-%add_to_maven_depmap org.apache.ant %{name}-netrexx %{version} JPP/%{name} %{name}-netrexx
-install -m 644 build/lib/ant-starteam.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-starteam-%{version}.jar
-install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-starteam.pom
-%add_to_maven_depmap org.apache.ant %{name}-starteam %{version} JPP/%{name} %{name}-starteam
-install -m 644 build/lib/ant-stylebook.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-stylebook-%{version}.jar
-install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-stylebook.pom
-%add_to_maven_depmap org.apache.ant %{name}-stylebook %{version} JPP/%{name} %{name}-stylebook
-install -m 644 build/lib/ant-vaj.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-vaj-%{version}.jar
-install -m 644 build/lib/ant-weblogic.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-weblogic-%{version}.jar
-install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-weblogic.pom
-%add_to_maven_depmap org.apache.ant %{name}-weblogic %{version} JPP/%{name} %{name}-weblogic
-install -m 644 build/lib/ant-xalan1.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-xalan1-%{version}.jar
-install -m 644 build/lib/ant-xslp.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-xslp-%{version}.jar
+  #Determine where to put it
+  case $jarname in
+#These go into %%{_javadir}, pom files have different names
+  ant | ant-bootstrap | ant-launcher) destdir=$RPM_BUILD_ROOT%{_javadir}; destname="";pomname="JPP-$jarname.pom";;
+#Bootstracp builds an incomplete ant-junit, don't ship it
+%if %with bootstrap
+  ant-junit) continue;;
 %endif
-install -m 644 build/lib/ant-antlr.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-antlr-%{version}.jar
-install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-antlr.pom
-%add_to_maven_depmap org.apache.ant %{name}-antlr %{version} JPP/%{name} %{name}-antlr
-install -m 644 build/lib/ant-apache-bsf.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-apache-bsf-%{version}.jar
-install -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-apache-bsf.pom
-%add_to_maven_depmap org.apache.ant %{name}-apache-bsf %{version} JPP/%{name} %{name}-apache-bsf
-install -m 644 build/lib/ant-apache-resolver.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-apache-resolver-%{version}.jar
-install -m 644 %{SOURCE10} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-apache-resolver.pom
-%add_to_maven_depmap org.apache.ant %{name}-apache-resolver %{version} JPP/%{name} %{name}-apache-resolver
-install -m 644 build/lib/ant-commons-logging.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-commons-logging-%{version}.jar
-install -m 644 %{SOURCE11} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-commons-logging.pom
-%add_to_maven_depmap org.apache.ant %{name}-commons-logging %{version} JPP/%{name} %{name}-commons-logging
-install -m 644 build/lib/ant-commons-net.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-commons-net-%{version}.jar
-install -m 644 %{SOURCE12} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-commons-net.pom
-%add_to_maven_depmap org.apache.ant %{name}-commons-net %{version} JPP/%{name} %{name}-commons-net
-#install -m 644 build/lib/ant-jai.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jai-%{version}.jar
-#install -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-jai.pom
-#%add_to_maven_depmap org.apache.ant %{name}-jai %{version} JPP/%{name} %{name}-jai
-install -m 644 build/lib/ant-apache-bcel.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-apache-bcel-%{version}.jar
-install -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-apache-bcel.pom
-%add_to_maven_depmap org.apache.ant %{name}-apache-bcel %{version} JPP/%{name} %{name}-apache-bcel
-install -m 644 build/lib/ant-apache-log4j.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-apache-log4j-%{version}.jar
-install -m 644 %{SOURCE15} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-apache-log4j.pom
-%add_to_maven_depmap org.apache.ant %{name}-apache-log4j %{version} JPP/%{name} %{name}-apache-log4j
-install -m 644 build/lib/ant-apache-oro.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-apache-oro-%{version}.jar
-install -m 644 %{SOURCE16} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-apache-oro.pom
-%add_to_maven_depmap org.apache.ant %{name}-apache-oro %{version} JPP/%{name} %{name}-apache-oro
-install -m 644 build/lib/ant-apache-regexp.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-apache-regexp-%{version}.jar
-install -m 644 %{SOURCE17} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-apache-regexp.pom
-%add_to_maven_depmap org.apache.ant %{name}-apache-regexp %{version} JPP/%{name} %{name}-apache-regexp
-ln -sf %{name}-apache-bcel.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jakarta-bcel.jar
-ln -sf %{name}-apache-log4j.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jakarta-log4j.jar
-ln -sf %{name}-apache-oro.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jakarta-oro.jar
-ln -sf %{name}-apache-regexp.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jakarta-regexp.jar
-install -m 644 build/lib/ant-javamail.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-javamail-%{version}.jar
-install -m 644 %{SOURCE18} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-javamail.pom
-%add_to_maven_depmap org.apache.ant %{name}-javamail %{version} JPP/%{name} %{name}-javamail
-install -m 644 build/lib/ant-jdepend.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jdepend-%{version}.jar
-install -m 644 %{SOURCE19} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-jdepend.pom
-%add_to_maven_depmap org.apache.ant %{name}-jdepend %{version} JPP/%{name} %{name}-jdepend
-install -m 644 build/lib/ant-jsch.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jsch-%{version}.jar
-install -m 644 %{SOURCE21} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-jsch.pom
-%add_to_maven_depmap org.apache.ant %{name}-jsch %{version} JPP/%{name} %{name}-jsch
-install -m 644 build/lib/ant-junit.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-junit-%{version}.jar
-install -m 644 %{SOURCE22} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP.%{name}-%{name}-junit.pom
-%add_to_maven_depmap org.apache.ant %{name}-junit %{version} JPP/%{name} %{name}-junit
-install -m 644 %{SOURCE26} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}-parent.pom
-%add_to_maven_depmap org.apache.ant %{name}-parent %{version} JPP %{name}-parent
-%endif
+#These go into %%{_javadir}/ant
+  *) destdir=$RPM_BUILD_ROOT%{_javadir}/%{name}; destname="/%{name}";
+  esac
 
-# jar aliases
-(cd $RPM_BUILD_ROOT%{_javadir} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+  #instal jar
+  install -m 644 ${jar} ${destdir}/${jarname}.jar
+  # jar aliases
+  ln -sf ../../java${destname}/${jarname}.jar $RPM_BUILD_ROOT%{ant_home}/lib/${jarname}.jar
+
+  #bootstrap does not have a pom
+  [ $jarname == ant-bootstrap ] && continue
+
+  #install pom
+  install -m 644 src/etc/poms/${jarname}/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/${pomname}
+  %add_to_maven_depmap org.apache.ant ${jarname} %{version} JPP${destname} ${jarname}
+done
+
+# add backward compatibility for nodeps jar that is now part of
+# main jar
+%add_to_maven_depmap org.apache.ant ant-nodeps %{version} JPP ant
+
+#ant-parent pom
+install -m 644 src/etc/poms/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}-parent.pom
+%add_to_maven_depmap org.apache.ant ant-parent %{version} JPP ant-parent
 
 # scripts: remove dos and os/2 scripts
 rm -f src/script/*.bat
@@ -633,34 +576,34 @@ cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
 # OPT_JAR_LIST fragments
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d
 echo "ant/ant-jmf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jmf
-echo "ant/ant-nodeps" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/nodeps
 echo "ant/ant-swing" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/swing
-echo "jaxp_transform_impl ant/ant-trax xalan-j2-serializer" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/trax
 %if %without bootstrap
 echo "antlr ant/ant-antlr" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/antlr
 echo "bsf ant/ant-apache-bsf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bsf
-echo "xml-commons-resolver12 ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
+echo "xml-commons-resolver ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
 echo "jakarta-commons-logging ant/ant-commons-logging" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-logging
 echo "jakarta-commons-net ant/ant-commons-net" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-net
-#echo "jai ant/ant-jai" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jai
+#echo "jai ant/ant-jai" > $RPM_BUILD_ROOT%%{_sysconfdir}/%%{name}.d/jai
 echo "bcel ant/ant-apache-bcel" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bcel
 echo "log4j ant/ant-apache-log4j" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-log4j
 echo "oro ant/ant-apache-oro" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-oro
 echo "regexp ant/ant-apache-regexp" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-regexp
+echo "xalan-j2 ant/ant-apache-xalan2" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-xalan2
 echo "javamail jaf ant/ant-javamail" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/javamail
 echo "jdepend ant/ant-jdepend" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jdepend
 echo "jsch ant/ant-jsch" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jsch
 echo "junit ant/ant-junit" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit
+echo "testutil ant/ant-testutil" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/testutil
 %endif
 
 %if %{build_javadoc}
 # javadoc
-mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %endif
 
 # fix link between manual and javadoc
-(cd docs/manual; ln -sf %{_javadocdir}/%{name}-%{version} api)
+(cd docs/manual; ln -sf %{_javadocdir}/%{name} api)
 
 %if %with bootstrap
 find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
@@ -674,578 +617,267 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
                                                  | xargs -t rm
 %endif
 
-# -----------------------------------------------------------------------------
-
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-# -----------------------------------------------------------------------------
-
 %post
 %update_maven_depmap
-%if %{gcj_support}
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
 
 %postun
 %update_maven_depmap
-%if %{gcj_support}
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post jmf
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun jmf
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post nodeps
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun nodeps
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post swing
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun swing
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post trax
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun trax
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %without bootstrap
-%if %{gcj_support}
-%post commons-net
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun commons-net
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-# We do not ship dependencies for these, so they are disabled.
-%if 0
-%if %{gcj_support}
-%post jai
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun jai
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-%endif
-
-%if %{gcj_support}
-%post antlr
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun antlr
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post apache-bcel
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun apache-bcel
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post apache-log4j
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun apache-log4j
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post apache-regexp
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun apache-regexp
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post apache-resolver
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun apache-resolver
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post junit
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun junit
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post apache-oro
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun apache-oro
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post javamail
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun javamail
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post commons-logging
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun commons-logging
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post jdepend
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun jdepend
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post jsch
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun jsch
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%post apache-bsf
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-
-%if %{gcj_support}
-%postun apache-bsf
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
-%endif
 
 %files
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc KEYS LICENSE NOTICE README WHATSNEW
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 %attr(0755,root,root) %{_bindir}/ant
 %attr(0755,root,root) %{_bindir}/antRun
 %{_javadir}/%{name}.jar
-%{_javadir}/%{name}-%{version}.jar
 %{_javadir}/%{name}-launcher.jar
-%{_javadir}/%{name}-launcher-%{version}.jar
 %{_javadir}/%{name}-bootstrap.jar
-%{_javadir}/%{name}-bootstrap-%{version}.jar
 %dir %{_javadir}/%{name}
 %dir %{ant_home}
 %dir %{ant_home}/etc
 %{ant_home}/etc/ant-update.xsl
 %{ant_home}/etc/changelog.xsl
+%{ant_home}/etc/coverage-frames.xsl
+%{ant_home}/etc/mmetrics-frames.xsl
 %{ant_home}/etc/log.xsl
 %{ant_home}/etc/tagdiff.xsl
 %{ant_home}/etc/junit-frames-xalan1.xsl
 %if %without bootstrap
 %{ant_home}/etc/common2master.xsl
+%{ant_home}/etc/printFailingTests.xsl
 %endif
 %dir %{ant_home}/lib
+%{ant_home}/lib/%{name}.jar
+%{ant_home}/lib/%{name}-launcher.jar
+%{ant_home}/lib/%{name}-bootstrap.jar
 %dir %{_sysconfdir}/%{name}.d
-%{_datadir}/maven2/poms/*
+%{_mavenpomdir}/*.pom
 %{_mavendepmapfragdir}/*
-%if %{gcj_support}
-%dir %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-%{version}.jar.*
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-launcher-%{version}.jar.*
-%endif
 
 %files jmf
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-jmf.jar
-%{_javadir}/%{name}/%{name}-jmf-%{version}.jar
+%{ant_home}/lib/%{name}-jmf.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jmf
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-jmf-%{version}.jar.*
-%endif
-
-%files nodeps
-%defattr(0644,root,root,0755)
-%{_javadir}/%{name}/%{name}-nodeps.jar
-%{_javadir}/%{name}/%{name}-nodeps-%{version}.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/nodeps
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-nodeps-%{version}.jar.*
-%endif
 
 %files swing
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-swing.jar
-%{_javadir}/%{name}/%{name}-swing-%{version}.jar
+%{ant_home}/lib/%{name}-swing.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/swing
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-swing-%{version}.jar.*
-%endif
-
-%files trax
-%defattr(0644,root,root,0755)
-%{_javadir}/%{name}/%{name}-trax.jar
-%{_javadir}/%{name}/%{name}-trax-%{version}.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/trax
-%{ant_home}/etc/mmetrics-frames.xsl
-%{ant_home}/etc/coverage-frames.xsl
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-trax-%{version}.jar.*
-%endif
 
 %if %without bootstrap
 %if %{with_manifest_only}
 %files manifest-only
-%defattr(0644,root,root,0755)
-%{_javadir}/%{name}/ant-icontract-%{version}.jar
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/ant-icontract.jar
-%{_javadir}/%{name}/ant-netrexx-%{version}.jar
 %{_javadir}/%{name}/ant-netrexx.jar
-%{_javadir}/%{name}/ant-starteam-%{version}.jar
 %{_javadir}/%{name}/ant-starteam.jar
-%{_javadir}/%{name}/ant-stylebook-%{version}.jar
 %{_javadir}/%{name}/ant-stylebook.jar
-%{_javadir}/%{name}/ant-vaj-%{version}.jar
 %{_javadir}/%{name}/ant-vaj.jar
-%{_javadir}/%{name}/ant-weblogic-%{version}.jar
 %{_javadir}/%{name}/ant-weblogic.jar
-%{_javadir}/%{name}/ant-xalan1-%{version}.jar
 %{_javadir}/%{name}/ant-xalan1.jar
-%{_javadir}/%{name}/ant-xslp-%{version}.jar
 %{_javadir}/%{name}/ant-xslp.jar
 %endif
 
 %files antlr
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-antlr.jar
-%{_javadir}/%{name}/%{name}-antlr-%{version}.jar
+%{ant_home}/lib/%{name}-antlr.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/antlr
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-antlr-%{version}.jar.*
-%endif
 
 %files apache-bsf
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-apache-bsf.jar
-%{_javadir}/%{name}/%{name}-apache-bsf-%{version}.jar
+%{ant_home}/lib/%{name}-apache-bsf.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-bsf
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-apache-bsf-%{version}.jar.*
-%endif
 
 %files apache-resolver
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-apache-resolver.jar
-%{_javadir}/%{name}/%{name}-apache-resolver-%{version}.jar
+%{ant_home}/lib/%{name}-apache-resolver.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-resolver
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-apache-resolver-%{version}.jar.*
-%endif
 
 %files commons-logging
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-commons-logging.jar
-%{_javadir}/%{name}/%{name}-commons-logging-%{version}.jar
+%{ant_home}/lib/%{name}-commons-logging.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/commons-logging
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-commons-logging-%{version}.jar.*
-%endif
 
 %files commons-net
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-commons-net.jar
-%{_javadir}/%{name}/%{name}-commons-net-%{version}.jar
+%{ant_home}/lib/%{name}-commons-net.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/commons-net
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-commons-net-%{version}.jar.*
-%endif
 
 # Disable as we dont ship the dependencies
 %if 0
 %files jai
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-jai.jar
-%{_javadir}/%{name}/%{name}-jai-%{version}.jar
+%{ant_home}/lib/%{name}-jai.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jai
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-jai-%{version}.jar.*
-%endif
 %endif
 
 %files apache-bcel
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-apache-bcel.jar
-%{_javadir}/%{name}/%{name}-apache-bcel-%{version}.jar
-%{_javadir}/%{name}/%{name}-jakarta-bcel.jar
+%{ant_home}/lib/%{name}-apache-bcel.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-bcel
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-apache-bcel-%{version}.jar.*
-%endif
 
 %files apache-log4j
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-apache-log4j.jar
-%{_javadir}/%{name}/%{name}-apache-log4j-%{version}.jar
-%{_javadir}/%{name}/%{name}-jakarta-log4j.jar
+%{ant_home}/lib/%{name}-apache-log4j.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-log4j
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-apache-log4j-%{version}.jar.*
-%endif
 
 %files apache-oro
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-apache-oro.jar
-%{_javadir}/%{name}/%{name}-apache-oro-%{version}.jar
-%{_javadir}/%{name}/%{name}-jakarta-oro.jar
+%{ant_home}/lib/%{name}-apache-oro.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-oro
 %{ant_home}/etc/maudit-frames.xsl
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-apache-oro-%{version}.jar.*
-%endif
 
 %files apache-regexp
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-apache-regexp.jar
-%{_javadir}/%{name}/%{name}-apache-regexp-%{version}.jar
-%{_javadir}/%{name}/%{name}-jakarta-regexp.jar
+%{ant_home}/lib/%{name}-apache-regexp.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/apache-regexp
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-apache-regexp-%{version}.jar.*
-%endif
+
+%files apache-xalan2
+%defattr(-,root,root,-)
+%{_javadir}/%{name}/%{name}-apache-xalan2.jar
+%{ant_home}/lib/%{name}-apache-xalan2.jar
+%config(noreplace) %{_sysconfdir}/%{name}.d/apache-xalan2
 
 %files javamail
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-javamail.jar
-%{_javadir}/%{name}/%{name}-javamail-%{version}.jar
+%{ant_home}/lib/%{name}-javamail.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/javamail
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-javamail-%{version}.jar.*
-%endif
 
 %files jdepend
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-jdepend.jar
-%{_javadir}/%{name}/%{name}-jdepend-%{version}.jar
+%{ant_home}/lib/%{name}-jdepend.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jdepend
 %{ant_home}/etc/jdepend.xsl
 %{ant_home}/etc/jdepend-frames.xsl
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-jdepend-%{version}.jar.*
-%endif
 
 %files jsch
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-jsch.jar
-%{_javadir}/%{name}/%{name}-jsch-%{version}.jar
+%{ant_home}/lib/%{name}-jsch.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jsch
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-jsch-%{version}.jar.*
-%endif
 
 %files junit
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %{_javadir}/%{name}/%{name}-junit.jar
-%{_javadir}/%{name}/%{name}-junit-%{version}.jar
+%{ant_home}/lib/%{name}-junit.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/junit
 %{ant_home}/etc/junit-frames.xsl
 %{ant_home}/etc/junit-noframes.xsl
-%if %{gcj_support}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/ant-junit-%{version}.jar.*
-%endif
+
+%files testutil
+%defattr(-,root,root,-)
+%{_javadir}/%{name}/%{name}-testutil.jar
+%{ant_home}/lib/%{name}-testutil.jar
+%config(noreplace) %{_sysconfdir}/%{name}.d/testutil
 
 %files scripts
-%defattr(0755,root,root,0755)
+%defattr(-,root,root,-)
 %{_bindir}/*.pl
 %{_bindir}/*.py*
 
 %files manual
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc docs/*
 
 %if %{build_javadoc}
 %files javadoc
-%defattr(0644,root,root,0755)
-%{_javadocdir}/%{name}-%{version}
+%defattr(-,root,root,-)
+%{_javadocdir}/%{name}
 %endif
 %endif
 
 # -----------------------------------------------------------------------------
 
 %changelog
+* Tue Feb 22 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8.2-4
+- Change oro to jakarta-oro in BR/R
+
+* Wed Feb  9 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8.2-3
+- Add backward compatible maven depmap for nodeps jar
+- Revert define->global change (different semantic in rpm 4.9.X)
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org>
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Mon Jan 3 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.2-1
+- Update to new upstream version.
+- Guidelines fixes.
+
+* Sun Nov 28 2010 Ville Skyttä <ville.skytta@iki.fi> - 0:1.8.1-9
+- Install javadocs into unversioned dir (#657879).
+
+* Tue Nov 23 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8.1-8
+- Fix pom filename (Resolves rhbz#655787)
+
+* Thu Oct 28 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-7
+- Build and package ant-testutil
+
+* Thu Oct 7 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.1-6
+- Remove jaf from the classpath.
+
+* Thu Oct 7 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.1-5
+- Drop gcj support.
+- Drop jaf BR/R it is part of Java 5+.
+
+* Fri Oct 1 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-4
+- Move ant-trax Provides/Obsoletes to ant-nodeps
+
+* Thu Aug 26 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-3
+- Remove -SNAPSHOT from version
+
+* Wed Aug 25 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.1-2
+- Use global instead of define.
+- Fix parent pom install.
+
+* Mon Aug 16 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-1
+- Update to ant 1.8.1
+- Update no-test-jar patch
+- Update class-path-in-manifest patch
+- Drop gnu-classpath patch
+- Retire trax subpackage no longer shipped
+- Add xalan2 subpackage and support for junitreport task
+- Drop old jakarta jar aliases
+
+* Thu Aug 13 2009 Alexander Kurtakov <akurtako@redhat.com> 0:1.7.1-12
+- Fix compile with commons-net 2.0.
+
+* Fri Aug  7 2009 Orion Poplawski <orion@cora.nwra.com> - 0:1.1.7-11
+- Add links to jar files into %%{ant_home} (Bug #179759)
+
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7.1-10.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7.1-9.2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Mon Dec 01 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0:1.7.1-8.2
+- Rebuild for Python 2.6
+
+* Wed Oct  1 2008 Tom "spot" Callaway <tcallawa@redhat.com> 0:1.7.1-7.2
+- Exclude bogus perl(the) Requires
+- Exclude bogus perl(oata), perl(examples) Provides
+
+* Fri Sep 26 2008 Permaine Cheung <pcheung@redhat.com> 0:1.7.1-7.1
+- Define with_gcj_support
+
+* Tue Sep 23 2008 Permaine Cheung <pcheung@redhat.com> 0:1.7.1-7
+- Update to 1.7.1
+- Fix some rpmlint issues
+
 * Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-7
 - enable non-bootstrap
 
