@@ -28,12 +28,19 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+
 %define with()          %{expand:%%{?with_%{1}:1}%%{!?with_%{1}:0}}
 %define without()       %{expand:%%{?with_%{1}:0}%%{!?with_%{1}:1}}
 %define bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
 %define bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
 
+# FIXME revert ot "bcond_with" once java stack update is moved
+# from contrib to main
+%if 1
+%bcond_without bootstrap
+%else
 %bcond_with bootstrap
+%endif
 
 %if %with bootstrap
 %global build_javadoc        0
@@ -448,7 +455,7 @@ sed -i -e "s|IMAGE_FILE_TYPE|BINARY_FILE_TYPE|g" src/main/org/apache/tools/ant/t
 %patch3 -p1
 
 # Fix class-path-in-manifest rpmlint warning
-%patch4
+%patch4 -p0
 
 # clean jar files
 find . -name "*.jar" | %{_bindir}/xargs -t rm
