@@ -34,13 +34,7 @@
 %define bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
 %define bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
 
-# FIXME revert ot "bcond_with" once java stack update is moved
-# from contrib to main
-%if 1
-%bcond_without bootstrap
-%else
 %bcond_with bootstrap
-%endif
 
 %if %with bootstrap
 %global build_javadoc        0
