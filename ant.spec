@@ -28,11 +28,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+%define _mavenpomdir /usr/share/maven2/poms
 
-%define with()          %{expand:%%{?with_%{1}:1}%%{!?with_%{1}:0}}
-%define without()       %{expand:%%{?with_%{1}:0}%%{!?with_%{1}:1}}
-%define bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
-%define bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
+%global with()          %{expand:%%{?with_%{1}:1}%%{!?with_%{1}:0}}
+%global without()       %{expand:%%{?with_%{1}:0}%%{!?with_%{1}:1}}
+%global bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
+%global bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
 
 %bcond_with bootstrap
 
@@ -51,7 +52,7 @@
 
 Name:           ant
 Version:        1.8.2
-Release:        5
+Release:        4
 Epoch:          0
 Summary:        Build tool for java
 Summary(it):    Tool per la compilazione di programmi java
@@ -70,6 +71,7 @@ Patch4:         apache-ant-class-path-in-manifest.patch
 BuildRequires:  jpackage-utils >= 0:1.7.5
 BuildRequires:  java-devel >= 0:1.5.0
 BuildRequires:  jaxp_transform_impl
+BuildRequires:  java-rpmbuild
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  junit
@@ -87,77 +89,67 @@ Requires:       xml-commons-jaxp-1.3-apis
 
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
-%rename		ant-optional
-%rename		ant-optional-full
+Obsoletes:      ant-optional < %{version}-%{release}
+Provides:       ant-optional = %{version}-%{release}
+Obsoletes:      ant-optional-full < %{version}-%{release}
+Provides:       ant-optional-full = %{version}-%{release}
 # Allow subpackages not in RHEL to be installed from JPackage
-Provides:       %{name} = %{EVRD}
+Provides:       %{name} = %{version}-%{release}
 # RHUG
-%rename		ant-devel
+Obsoletes:      ant-devel < %{version}-%{release}
+Provides:       ant-devel = %{version}-%{release}
 # Mandriva
 Conflicts:      j2sdk-ant
 # RHEL3 and FC2
-%rename		%{name}-libs
-%rename		%{name}-core
-%rename		%{name}-nodeps
-%rename		%{name}-trax
+Obsoletes:      %{name}-libs < %{version}-%{release}
+Provides:       %{name}-libs = %{version}-%{release}
+Obsoletes:      %{name}-core < %{version}-%{release}
+Provides:       %{name}-core = %{version}-%{release}
+Obsoletes:       %{name}-nodeps < %{version}-%{release}
+Provides:       %{name}-nodeps = %{version}-%{release}
+Obsoletes:      %{name}-trax < %{version}-%{release}
+Provides:       %{name}-trax = %{version}-%{release}
 
 Requires(post):   jpackage-utils >= 0:1.7.5
 Requires(postun): jpackage-utils >= 0:1.7.5
-
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
 jakarta and xml projects.
 
-%description -l fr
-Ant est un outil de compilation multi-plateformes pour java. Il est
-utilisé par les projets apache-jakarta et apache-xml.
-
-%description -l it
-Ant e' un tool indipendente dalla piattaforma creato per faciltare la
-compilazione di programmi java.
-Allo stato attuale viene utilizzato dai progetti apache jakarta ed
-apache xml.
-
 %package jmf
 Summary:        Optional jmf tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
-Requires:       %{name}-nodeps = %{EVRD}
-Provides:       ant-jmf = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}-nodeps = %{version}-%{release}
+Provides:       ant-jmf = %{version}-%{release}
 
 %description jmf
 Optional jmf tasks for %{name}.
 
-%description jmf -l fr
-Taches jmf optionelles pour %{name}.
-
 %package swing
 Summary:        Optional swing tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
-Provides:       ant-swing = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
+Provides:       ant-swing = %{version}-%{release}
 
 %description swing
 Optional swing tasks for %{name}.
-
-%description swing -l fr
-Taches swing optionelles pour %{name}.
 
 %if %without bootstrap
 %if %{with_manifest_only}
 %package manifest-only
 Summary:        Manifest-only jars for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
-Provides:       %{name}-icontract = %{EVRD}
-Provides:       %{name}-netrexx = %{EVRD}
-Provides:       %{name}-starteam = %{EVRD}
-Provides:       %{name}-stylebook = %{EVRD}
-Provides:       %{name}-vaj = %{EVRD}
-Provides:       %{name}-weblogic = %{EVRD}
-Provides:       %{name}-xalan1 = %{EVRD}
-Provides:       %{name}-xslp = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
+Provides:       %{name}-icontract = %{version}-%{release}
+Provides:       %{name}-netrexx = %{version}-%{release}
+Provides:       %{name}-starteam = %{version}-%{release}
+Provides:       %{name}-stylebook = %{version}-%{release}
+Provides:       %{name}-vaj = %{version}-%{release}
+Provides:       %{name}-weblogic = %{version}-%{release}
+Provides:       %{name}-xalan1 = %{version}-%{release}
+Provides:       %{name}-xslp = %{version}-%{release}
 
 %description  manifest-only
 Manifest-only jars for %{name}.
@@ -166,230 +158,187 @@ Manifest-only jars for %{name}.
 %package antlr
 Summary:        Optional antlr tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       antlr
 BuildRequires:  antlr
-Provides:       ant-antlr = %{EVRD}
+Provides:       ant-antlr = %{version}-%{release}
 
 %description antlr
 Optional antlr tasks for %{name}.
 
-%description antlr -l fr
-Taches antlr optionelles pour %{name}.
-
 %package apache-bsf
 Summary:        Optional apache bsf tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       bsf
 BuildRequires:  bsf
-Provides:       ant-apache-bsf = %{EVRD}
+Provides:       ant-apache-bsf = %{version}-%{release}
 
 %description apache-bsf
 Optional apache bsf tasks for %{name}.
 
-%description apache-bsf -l fr
-Taches apache bsf optionelles pour %{name}.
-
 %package apache-resolver
 Summary:        Optional apache resolver tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       xml-commons-resolver
 BuildRequires:  xml-commons-resolver
-Provides:       ant-apache-resolver = %{EVRD}
+Provides:       ant-apache-resolver = %{version}-%{release}
 
 %description apache-resolver
 Optional apache resolver tasks for %{name}.
 
-%description apache-resolver -l fr
-Taches apache resolver optionelles pour %{name}.
 
 %package commons-logging
 Summary:        Optional commons logging tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       jakarta-commons-logging
 BuildRequires:  jakarta-commons-logging
-Provides:       ant-commons-logging = %{EVRD}
+Provides:       ant-commons-logging = %{version}-%{release}
 
 %description commons-logging
 Optional commons logging tasks for %{name}.
 
-%description commons-logging -l fr
-Taches commons logging optionelles pour %{name}.
-
 %package commons-net
 Summary:        Optional commons net tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       jakarta-commons-net
 BuildRequires:  jakarta-commons-net
-Provides:       ant-commons-net = %{EVRD}
+Provides:       ant-commons-net = %{version}-%{release}
 
 %description commons-net
 Optional commons net tasks for %{name}.
-
-%description commons-net -l fr
-Taches commons net optionelles pour %{name}.
 
 # Disable because we don't ship the dependencies
 %if 0
 %package jai
 Summary:        Optional jai tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       jai
 BuildRequires:  jai
-Provides:       ant-jai = %{EVRD}
+Provides:       ant-jai = %{version}-%{release}
 
 %description jai
 Optional jai tasks for %{name}.
 
-%description jai -l fr
-Taches jai optionelles pour %{name}.
 %endif
 
 %package apache-bcel
 Summary:        Optional apache bcel tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       bcel
 BuildRequires:  bcel
-Provides:       ant-apache-bcel = %{EVRD}
-Provides:       ant-jakarta-bcel = %{EVRD}
-Obsoletes:      ant-jakarta-bcel < %{EVRD}
+Provides:       ant-apache-bcel = %{version}-%{release}
+Provides:       ant-jakarta-bcel = %{version}-%{release}
+Obsoletes:      ant-jakarta-bcel < %{version}-%{release}
 
 %description apache-bcel
 Optional apache bcel tasks for %{name}.
 
-%description apache-bcel -l fr
-Taches apache bcel optionelles pour %{name}.
-
 %package apache-log4j
 Summary:        Optional apache log4j tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       log4j
 BuildRequires:  log4j
-Provides:       ant-apache-log4j = %{EVRD}
-Provides:       ant-jakarta-log4j = %{EVRD}
-Obsoletes:      ant-jakarta-log4j < %{EVRD}
+Provides:       ant-apache-log4j = %{version}-%{release}
+Provides:       ant-jakarta-log4j = %{version}-%{release}
+Obsoletes:      ant-jakarta-log4j < %{version}-%{release}
 
 %description apache-log4j
 Optional apache log4j tasks for %{name}.
 
-%description apache-log4j -l fr
-Taches apache log4j optionelles pour %{name}.
-
 %package apache-oro
 Summary:        Optional apache oro tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
-Requires:       jakarta-oro
-BuildRequires:  jakarta-oro
-Provides:       ant-apache-oro = %{EVRD}
-Provides:       ant-jakarta-oro = %{EVRD}
-Obsoletes:      ant-jakarta-oro < %{EVRD}
+Requires:       %{name} = %{version}-%{release}
+Requires:       oro
+BuildRequires:  oro
+Provides:       ant-apache-oro = %{version}-%{release}
+Provides:       ant-jakarta-oro = %{version}-%{release}
+Obsoletes:      ant-jakarta-oro < %{version}-%{release}
 
 %description apache-oro
 Optional apache oro tasks for %{name}.
 
-%description apache-oro -l fr
-Taches apache oro optionelles pour %{name}.
-
 %package apache-regexp
 Summary:        Optional apache regexp tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       regexp
 BuildRequires:  regexp
-Provides:       ant-apache-regexp = %{EVRD}
-Provides:       ant-jakarta-regexp = %{EVRD}
-Obsoletes:      ant-jakarta-regexp < %{EVRD}
+Provides:       ant-apache-regexp = %{version}-%{release}
+Provides:       ant-jakarta-regexp = %{version}-%{release}
+Obsoletes:      ant-jakarta-regexp < %{version}-%{release}
 
 %description apache-regexp
 Optional apache regexp tasks for %{name}.
 
-%description apache-regexp -l fr
-Taches apache regexp optionelles pour %{name}.
-
 %package apache-xalan2
 Summary:        Optional apache xalan2 tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       regexp
 BuildRequires:  regexp
-Provides:       ant-apache-xalan2 = %{EVRD}
+Provides:       ant-apache-xalan2 = %{version}-%{release}
 
 %description apache-xalan2
 Optional apache xalan2 tasks for %{name}.
 
-%description apache-xalan2 -l fr
-Taches apache xalan2 optionelles pour %{name}.
-
 %package javamail
 Summary:        Optional javamail tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       javamail >= 0:1.2-5jpp
 BuildRequires:  javamail >= 0:1.2-5jpp
-Provides:       ant-javamail = %{EVRD}
+Provides:       ant-javamail = %{version}-%{release}
 
 %description javamail
 Optional javamail tasks for %{name}.
 
-%description javamail -l fr
-Taches javamail optionelles pour %{name}.
-
 %package jdepend
 Summary:        Optional jdepend tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       jdepend
 BuildRequires:  jdepend
-Provides:       ant-jdepend = %{EVRD}
+Provides:       ant-jdepend = %{version}-%{release}
 
 %description jdepend
 Optional jdepend tasks for %{name}.
 
-%description jdepend -l fr
-Taches jdepend optionelles pour %{name}.
-
 %package jsch
 Summary:        Optional jsch tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       jsch
 BuildRequires:  jsch
-Provides:       ant-jsch = %{EVRD}
+Provides:       ant-jsch = %{version}-%{release}
 
 %description jsch
 Optional jsch tasks for %{name}.
 
-%description jsch -l fr
-Taches jsch optionelles pour %{name}.
-
 %package junit
 Summary:        Optional junit tasks for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       junit
 Requires:       xalan-j2
-Provides:       ant-junit = %{EVRD}
+Provides:       ant-junit = %{version}-%{release}
 
 %description junit
 Optional junit tasks for %{name}.
 
-%description junit -l fr
-Taches junit optionelles pour %{name}.
-
 %package testutil
 Summary:        Test utility classes for %{name}
 Group:          Development/Java
-Requires:       %{name} = %{EVRD}
+Requires:       %{name} = %{version}-%{release}
 Requires:       junit
-Provides:       ant-testutil = %{EVRD}
+Provides:       ant-testutil = %{version}-%{release}
 
 %description testutil
 Test utility tasks for %{name}.
@@ -398,15 +347,12 @@ Test utility tasks for %{name}.
 Summary:        Additional scripts for %{name}
 Group:          Development/Java
 AutoReqProv:    no
-Requires:       %{name} = %{EVRD}
-Requires:       perl
-Requires:       python(abi)
+Requires:       %{name} = %{version}-%{release}
+Requires:       perl-base
+Requires:       python
 
 %description scripts
 Additional Perl and Python scripts for %{name}.
-
-%description scripts -l fr
-Scripts additionels pour %{name}.
 
 %package manual
 Summary:        Manual for %{name}
@@ -415,21 +361,13 @@ Group:          Development/Java
 %description manual
 Documentation for %{name}.
 
-%description manual -l it
-Documentazione di %{name}.
-
-%description manual -l fr
-Documentation pour %{name}.
-
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Documentation
+Group:          Development/Java
 
 %description javadoc
 Javadoc for %{name}.
 
-%description javadoc -l fr
-Javadoc pour %{name}.
 %endif
 
 # -----------------------------------------------------------------------------
@@ -540,10 +478,6 @@ do
   %add_to_maven_depmap org.apache.ant ${jarname} %{version} JPP${destname} ${jarname}
 done
 
-# add backward compatibility for nodeps jar that is now part of
-# main jar
-%add_to_maven_depmap org.apache.ant ant-nodeps %{version} JPP ant
-
 #ant-parent pom
 install -m 644 src/etc/poms/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}-parent.pom
 %add_to_maven_depmap org.apache.ant ant-parent %{version} JPP ant-parent
@@ -611,6 +545,11 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
                                                  | xargs -t rm
 %endif
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+# -----------------------------------------------------------------------------
+
 %post
 %update_maven_depmap
 
@@ -645,7 +584,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %{ant_home}/lib/%{name}-launcher.jar
 %{ant_home}/lib/%{name}-bootstrap.jar
 %dir %{_sysconfdir}/%{name}.d
-%{_mavenpomdir}/*.pom
+%{_mavenpomdir}/*
 %{_mavendepmapfragdir}/*
 
 %files jmf
@@ -793,461 +732,4 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %{_javadocdir}/%{name}
 %endif
 %endif
-
-# -----------------------------------------------------------------------------
-
-%changelog
-* Tue Feb 22 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8.2-4
-- Change oro to jakarta-oro in BR/R
-
-* Wed Feb  9 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8.2-3
-- Add backward compatible maven depmap for nodeps jar
-- Revert define->global change (different semantic in rpm 4.9.X)
-
-* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org>
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Mon Jan 3 2011 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.2-1
-- Update to new upstream version.
-- Guidelines fixes.
-
-* Sun Nov 28 2010 Ville Skyttä <ville.skytta@iki.fi> - 0:1.8.1-9
-- Install javadocs into unversioned dir (#657879).
-
-* Tue Nov 23 2010 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.8.1-8
-- Fix pom filename (Resolves rhbz#655787)
-
-* Thu Oct 28 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-7
-- Build and package ant-testutil
-
-* Thu Oct 7 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.1-6
-- Remove jaf from the classpath.
-
-* Thu Oct 7 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.1-5
-- Drop gcj support.
-- Drop jaf BR/R it is part of Java 5+.
-
-* Fri Oct 1 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-4
-- Move ant-trax Provides/Obsoletes to ant-nodeps
-
-* Thu Aug 26 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-3
-- Remove -SNAPSHOT from version
-
-* Wed Aug 25 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.8.1-2
-- Use global instead of define.
-- Fix parent pom install.
-
-* Mon Aug 16 2010 Orion Poplawski <orion@cora.nwra.com> 0:1.8.1-1
-- Update to ant 1.8.1
-- Update no-test-jar patch
-- Update class-path-in-manifest patch
-- Drop gnu-classpath patch
-- Retire trax subpackage no longer shipped
-- Add xalan2 subpackage and support for junitreport task
-- Drop old jakarta jar aliases
-
-* Thu Aug 13 2009 Alexander Kurtakov <akurtako@redhat.com> 0:1.7.1-12
-- Fix compile with commons-net 2.0.
-
-* Fri Aug  7 2009 Orion Poplawski <orion@cora.nwra.com> - 0:1.1.7-11
-- Add links to jar files into %%{ant_home} (Bug #179759)
-
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7.1-10.2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Mon Feb 23 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7.1-9.2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Mon Dec 01 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0:1.7.1-8.2
-- Rebuild for Python 2.6
-
-* Wed Oct  1 2008 Tom "spot" Callaway <tcallawa@redhat.com> 0:1.7.1-7.2
-- Exclude bogus perl(the) Requires
-- Exclude bogus perl(oata), perl(examples) Provides
-
-* Fri Sep 26 2008 Permaine Cheung <pcheung@redhat.com> 0:1.7.1-7.1
-- Define with_gcj_support
-
-* Tue Sep 23 2008 Permaine Cheung <pcheung@redhat.com> 0:1.7.1-7
-- Update to 1.7.1
-- Fix some rpmlint issues
-
-* Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-7
-- enable non-bootstrap
-
-* Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-6
-- add ant-bootstrap jar if bootstrap is enabled
-- enable jmf, swing, trax if bootstrap is enabled
-- BuildRequires: jaxp_transform_impl
-- BuildRequires: junit for non-bootstrap
-
-* Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-5
-- enable ant-nodeps in bootstrap mode
-
-* Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-4
-- remove junit for bootstrap
-
-* Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-3
-- build as bootstrap
-
-* Tue Jul 15 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-2
-- set rpm_mode=false by default
-
-* Thu Jul 10 2008 David Walluck <dwalluck@redhat.com> 0:1.7.1-1
-- 1.7.1
-- update maven pom files
-- rediff apache-ant-jars.patch
-- rediff apache-ant-bz163689.patch
-- add apache-ant-gnu-classpath.patch
-- set rpm_mode=true in conf since the ant script handles the rest
-
-* Thu Jul 10 2008 David Walluck <dwalluck@redhat.com> 0:1.7.0-3
-- add bootstrap mode
-- replace some alternatives/virtual requires by explicit requires
-- remove javadoc scriptlets
-- fix GCJ support
-- add workaround for xalan-j2 in %%{_sysconfdir}/%%{name}.d/trax
-- version Obsoletes and add Provides
-- remove Conflicts
-- mark files in %%{_sysconfdir} as %%config(noreplace)
-
-* Thu Jul 03 2007 Ralph Apel <r.apel at r-apel.de> - 0:1.7.0-2.jpp5
-- Add poms and depmap frags
-- (B)R jpackage-utils >= 0:1.7.5
-- BR java-devel = 0:1.5.0
-- R java >= 0:1.5.0
-
-* Wed Jun 20 2007 Fernando Nasser <fnasser at redhat.com> - 0:1.7.0-1jpp
-- Upgrade to the final 1.7.0
-
-* Thu Sep 21 2006 Will Tatam <will.tatam@red61.com> - 0:1.7.0-0.Beta1.1jpp
-- Upgraded to 1.7.0Beta1
-- removed the apache-ant-1.6.5-jvm1.5-detect.patch as merged upstream
-
-* Fri Aug 11 2006 Deepak Bhole <dbhole@redhat.com> - 0:1.6.5-2jpp
-- Added conditional native compilation
-- Added patch to fix jvm version detection
-- Add missing requirements
-- Synch with Fedora spec
-
-* Wed Nov 09 2005 Fernando Nasser <fnasser at redhat.com> - 0:1.6.5-1jpp
-- Upgrade to 1.6.5
-- Incorporate the following changes:
-  From Gary Benson <gbenson at redhat.com>:
-- Allow subpackages not in Fedora to be installed from JPackage
-- Add NOTICE file as per Apache License version 2.0
-- Own /usr/share/java/ant
-  From Vadim Nasardinov <vadimn@redhat.com>
-- Removed apache-ant-1.6.2.patch.  Incorporated upstream.
-  From David Walluck <david@jpackage.org>
-- Add manifest-only package (mainly for eclipse)
-- Add conflicts on j2sdk for Mandriva
-
-* Mon Nov  8 2004 Gary Benson <gbenson at redhat.com> - 0:1.6.2-3jpp
-- Build OPT_JAR_LIST from files in /etc/ant.d.
-
-* Mon Sep 06 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.2-2jpp
-- Fix to backward compatibility symbolic links.
-
-* Wed Aug 17 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.2-1jpp
-- Update to Ant 1.6.2
-
-* Thu Aug 05 2004 Fernando Nasser <fnasser at redhat.com> - 0:1.6.1-2jpp
-- Remove incorrect noreplace option for ant.conf; it can't be used anymore
-  because the sub-packages update that file.
-- Add patch to fix temp directory used for file containing large
-  command strings (> 4k)
-
-* Tue Jun 01 2004 Randy Watler <rwatler at finali.com> - 0:1.6.1-1jpp
-- Extend subpackage builds to update ant.conf
-
-* Tue Mar 23 2004 Randy Watler <rwatler at finali.com> - 0:1.6.1-1jpp
-- Update to Ant 1.6.1
-- Change ant launch script to source instead of patch
-- Move optional components to ant subdirectory: %%{_javadir}/%%{name}
-- Remove os/2 scripts and set JAVA_HOME for build
-
-* Wed Feb 11 2004 Randy Watler <rwatler at finali.com> - 0:1.6.0-1jpp
-- Update to Ant 1.6.0
-- Break out optional/optional-full components
-- Revise ant launch scripts and support ~/.ant/ant.conf configuration file
-- Use --noconfig flag to bootstrap ant build and override existing jpp config
-- Modify ant launcher to use ant.library.dir property to find extra jars
-- Port changes made in ant launch script for 1.6.2 back into patches
-
-* Wed Aug 13 2003 Paul Nasrat <pauln at truemesh.com> - 0:1.5.4-2jpp
-- remove bogus NoSource entries
-
-* Tue Aug 12 2003 Paul Nasrat <pauln at truemesh.com> - 0:1.5.4-1jpp
-- Update to 1.5.4
-- JavaCC task fixed using merged upstream patches from ant HEAD
-
-* Mon May  5 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:1.5.3-2jpp
-- Fix non-versioned javadoc symlinking.
-
-* Tue Apr 22 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:1.5.3-1jpp
-- Update to 1.5.3.
-- Remove runtime java-devel dependency.
-- Add Epochs in all Provides and Requires.
-- Include non-versioned javadoc symlink.
-- Build without dependencies that are partially or completely missing from
-  JPackage 1.5 (oldbsf, xalan-j1, stylebook1.0b3).
-- Add netcomponents to optional jar list in ant.conf.
-
-* Tue Apr 01 2003 Nicolas Mailhot <Nicolas.Mailhot at JPackage.org> - 1.5.2-13jpp
-- ant-optional is optional (silly me)
-- jaxp_transform is optional , do not require it
-- epoch, correct jpackage-utils requires...
-
-* Fri Mar 21 2003 Nicolas Mailhot <Nicolas.Mailhot at JPackage.org> - 1.5.2-11jpp
-- add an optional jar list as per Ville's suggestion
-
-* Thu Mar 20 2003 Nicolas Mailhot <Nicolas.Mailhot at JPackage.org> - 1.5.2-10jpp
-- hopefully fix CLASSSPATH_OVERRIDE behaviour
-
-* Tue Mar 18 2003 Nicolas Mailhot <Nicolas.Mailhot at JPackage.org> - 1.5.2-7jpp
-- for JPackage-utils 1.5
-
-* Wed Mar 12 2003 Ville Skyttä <ville.skytta at iki.fi> - 1.5.2-5jpp
-- Move ANT_HOME to /usr/share/ant.
-- Don't special-case the lib dir for RPM layout any more, use ANT_HOME/lib.
-- Install XSLs into ANT_HOME/etc.
-- Call set_jvm by default in ant.conf.
-- Provide ant-optional-clean (versioned) in ant-optional.
-- Make ant-optional-full conflict with ant-optional-clean.
-- Add version info to ant-optional provision in ant-optional-full.
-- Built with Sun 1.4.1_02 javac (to get JDK 1.4 regex).
-
-* Tue Mar 11 2003 Henri Gomez <hgomez@users.sourceforge.net> 1.5.2-4jp
-- changed provided /etc/ant.conf so that if usejikes is allready provided
-  it didn't set it. Which such modification if you want to disable
-  ant to use jikes even if jikes is set in /etc/ant.conf you'll just have
-  to do usejikes=false ant build.xml.
-
-* Mon Mar 10 2003 Henri Gomez <hgomez@users.sourceforge.net> 1.5.2-3jp
-- rebuilt with IBM SDK 1.3.1 since there was zip corruption when built
-  with jikes 1.18 and IBM SDK 1.4.
-
-* Wed Mar 05 2003 Henri Gomez <hgomez@users.sourceforge.net> 1.5.2-2jp
-- updated URL and source location
-
-* Wed Mar 05 2003 Henri Gomez <hgomez@users.sourceforge.net> 1.5.2-1jp
-- 1.5.2
-- remove JDK 1.4 related patchs which are now included in ant 1.5.2
-- fix ant-optional-full pre/post install script (now remove correctly all
-  ant optional jars)
-- Built with jikes 1.18 and IBM SDK 1.4
-
-* Sat Feb  1 2003 Ville Skyttä <ville.skytta at iki.fi> - 1.5.1-8jpp
-- Symlink a transformer into ANT_LIB for smoother experience on Java 1.3.
-- Requires jaxp_transform_impl.
-- Don't remove optional.jar symlinks on optional-full upgrade.
-- Include Sun's 1.4 JSSE and JCE jars in runtime path, see
-  <http://nagoya.apache.org/bugzilla/show_bug.cgi?id=16242>.
-- Use jpackage-utils for setting JAVA_HOME when building.
-- Built with Sun 1.4.1_01 javac.
-
-* Mon Jan 20 2003 David Walluck <david@anti-microsoft.org> 1.5.1-7jpp
-- oldbsf
-
-* Fri Dec 20 2002 Ville Skyttä <ville.skytta at iki.fi> - 1.5.1-6jpp
-- Really get rid of automatic dependencies for the -scripts package.
-
-* Wed Dec 18 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.5.1-5jpp
-- scripts subpackages
-- file-based manual dependencies, as packages doesn't have the same name on RedHat and Mandrake
-
-* Wed Dec 11 2002 Ville Skyttä <ville.skytta at iki.fi> - 1.5.1-4jpp
-- Patched to allow easier use with Jikes and IBM's 1.4.0, see
-  <http://nagoya.apache.org/bugzilla/show_bug.cgi?id=15289> for details.
-
-* Mon Oct 07 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5.1-3jpp
-- new post script for optional-full since rpm didn't works as
-  expected and didn't set correct symlink for ant-optional.jar
-
-* Thu Oct 03 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5.1-2jpp
-- really used JDK 1.4.1 to get JDK 1.4.x Regexp
-
-* Thu Oct 03 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5.1-1jpp
-- ant 1.5.1
-
-* Fri Jul 12 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5-5jpp
-- ant script standard behaviour restored, ie ant/lib jars are taken
-  before CLASSPATH. You should define CLASSPATH_OVERRIDE env var to have
-  CLASSPATH before ant/lib jars
-- applied ant script patch for cygwin (cygwin rpm users around ?)
-- remove conflict in ant-optional-full, just put provides
-
-* Fri Jul 12 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5-4jpp
-- fix a problem in xerces-j2 build by changing the way CLASSPATH is constructed:
-  first add jars found in CLASSPATH, then add xml-commons-apis, jaxp_parser_impl,
-  ant, ant-optional and finish with jars found in ant/lib.
-- jpackage-utils is no more required (but recommanded :)
-- ant-optional-full provides ant-optional
-- fix link between manual and api (javadoc)
-
-* Thu Jul 11 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5-3jpp
-- add missing symlink between optional-full.jar and optional.jar
-
-* Wed Jul 10 2002 Ville Skyttä <ville.skytta at iki.fi> 1.5-2jpp
-- Requires jaxp_parser_impl, no longer jaxp_parser2
-  (jaxp_parser_impl already requires xml-commons-apis).
-- Use sed instead of bash 2 extension when symlinking.
-
-* Wed Jul 10 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5-1jpp
-* ant 1.5
-
-* Tue Jul 09 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.5.Beta3-1jpp
-- ant 1.5 beta 3
-- added bcel as required
-
-* Tue Jul 09 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.4.1-14jpp
-- added regexp to list of dependant packages
-
-* Tue Jul 09 2002 Henri Gomez <hgomez@users.sourceforge.net> 1.4.1-13jpp
-- added optional-full which include all ant tasks, even those without
-  matching package
-- added jdepend 2.2
-- remove require oro, since ant could works without it
-- ant lib is now in %%{_javadir}/%%{name}, put external jars here
-
-* Tue May 07 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-12jpp
-- hardcoded distribution and vendor tag
-- group tag again
-
-* Thu May 2 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-11jpp
-- no more jikes specific support in launch script
-- source user prefs before configuration in launch script
-- distribution tag
-- group tag
-- provided original script as documentation
-
-* Fri Apr 05 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-10jpp
-- used xalan-j1 instead of xalan-j2-compat
-
-* Mon Mar 11 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-9jpp
-- jaxp_parser2 support
-
-* Wed Feb 06 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-8jpp
-- netcomponents support
-
-* Sun Jan 27 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-7jpp
-- adaptation to new stylebook1.0b3 package
-- stylebook is a dependency of optional package
-- removed redundant dependencies
-- launch script correction
-
-* Fri Jan 25 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-6jpp
-- cleaned manifest from class-path references
-- section macro
-
-* Thu Jan 17 2002 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-5jpp
-- versioned dir for javadoc
-- no dependencies for manual and javadoc packages
-- stricter dependency for optional package
-- additional sources in individual archives
-- upgraded launch script
-- no more javadoc cross-linking
-- additional requirement for optional package: xml-commons-apis, xalan-j2, xalan-j2-compat, jaf, javamail, & log4j
-
-* Sat Dec 1 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-4jpp
-- removed conditional build
-- removed redundant BuildRequires
-- ant-optional.jar in ant-optional package
-- javadoc into javadoc package
-- new launch script using functions library
-
-* Wed Nov 21 2001 Christian Zoffoli <czoffoli@littlepenguin.org> 1.4.1-3jpp
-- readded Requires: oro junit stylebook-1.0b3 bsf rhino antlr to the main package
-- corrected changelog release 1jpp-> 2jpp
-
-* Tue Nov 20 2001 Christian Zoffoli <czoffoli@littlepenguin.org> 1.4.1-2jpp
-- conditional build
-- removed packager tag
-- new jpp extension
-- added xalan 2.2.D13 support
-- added BuildRequires: xalan-j2 >= 2.2.D13
-- removed Requires: oro junit stylebook-1.0b3 bsf rhino antlr
-
-* Mon Oct 15 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4.1-1jpp
-- 1.4.1
-
-* Sat Oct 6 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4-4jpp
-- used original tarball
-
-* Sun Sep 30 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4-3jpp
-- more macros
-
-* Wed Sep 26 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4-2jpp
-- first unified release
-- dropped explicit xalan-j2 requirement, as stylebook-1.0b3 already requires it
-- added missing xalan-j1 compatibility classes
-- s/jPackage/JPackage
-
-* Wed Sep 05 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.4-1mdk
-- 1.4
-- added xalan-j2 antlr bsf rhino to buildrequires and requires
-- launch script cleanup
-
-* Tue Jul 31 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.3-4mdk
-- jaxp_parser symlink is now jaxp_parser.jar
-
-* Thu Jul 26 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.3-3mdk
-- used alternative jaxp_parser
-- updated launch script
-
-* Sat Jun 23 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.3-2mdk
-- s/Copyright/License/
-- truncated description to 72 columns in spec
-- updated launch script
-
-* Mon Jun 11 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.3-1mdk
-- 1.3
-- new versioning scheme
-- compiled with oro, junit and stylebook support
-- spec cleanup
-
-* Sat Mar 10 2001 Guillaume Rousse <guillomovitch@users.sourceforge.net> 1.2-9mdk
-- vendor tag
-- packager tag
-
-* Sat Feb 17 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-8mdk
-- spec cleanup
-- corrected changelog
-- changed description
-
-* Sun Feb 04 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-7mdk
-- launch script improvments (Christian Zoffoli <czoffoli@linux-mandrake.com>)
-- added french in spec
-- more macros
-
-* Fri Feb 02 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-6mdk
-- corrected launch script
-
-* Thu Feb 01 2001 Christian Zoffoli <czoffoli@linux-mandrake.com> 1.2-5mdk
-- more macros
-- added italian in spec
-
-* Wed Jan 31 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-4mdk
-- merged with Henri Gomez <hgomez@users.sourceforge.net> specs:
-- changed name to ant
-- changed javadir to /usr/share/java
-- dropped jdk and jre requirement
-- corrected require to jaxp
-- added Jikes support
-- used our own bash script
-- dropped perl script
-- dropped ant home directory
-
-* Sun Jan 14 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-3mdk
-- changed name to jakarta-ant
-- changed group to Development/Java
-
-* Wed Jan 04 2001 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-2mdk
-- new spec file
-- discarded ugly non-free Sun jaxp library from sources, and used pretty open-source xerces instead
-
-* Wed Dec 20 2000 Guillaume Rousse <g.rousse@linux-mandrake.com> 1.2-1mdk
-- first Mandrake release
-- used SRPMS from Henri Gomez <hgomez@users.sourceforge.net>
 
