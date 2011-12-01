@@ -439,14 +439,14 @@ sh ./build.sh --noconfig jars
 # -----------------------------------------------------------------------------
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 # ANT_HOME and subdirs
-mkdir -p $RPM_BUILD_ROOT%{ant_home}/{lib,etc}
+mkdir -p %{buildroot}%{ant_home}/{lib,etc}
 
 # jars
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+install -d -m 755 %{buildroot}%{_javadir}/%{name}
+install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
 
 for jar in build/lib/*.jar
 do
@@ -456,30 +456,30 @@ do
   #Determine where to put it
   case $jarname in
 #These go into %%{_javadir}, pom files have different names
-  ant | ant-bootstrap | ant-launcher) destdir=$RPM_BUILD_ROOT%{_javadir}; destname="";pomname="JPP-$jarname.pom";;
+  ant | ant-bootstrap | ant-launcher) destdir=%{buildroot}%{_javadir}; destname="";pomname="JPP-$jarname.pom";;
 #Bootstracp builds an incomplete ant-junit, don't ship it
 %if %with bootstrap
   ant-junit) continue;;
 %endif
 #These go into %%{_javadir}/ant
-  *) destdir=$RPM_BUILD_ROOT%{_javadir}/%{name}; destname="/%{name}";
+  *) destdir=%{buildroot}%{_javadir}/%{name}; destname="/%{name}";
   esac
 
   #instal jar
   install -m 644 ${jar} ${destdir}/${jarname}.jar
   # jar aliases
-  ln -sf ../../java${destname}/${jarname}.jar $RPM_BUILD_ROOT%{ant_home}/lib/${jarname}.jar
+  ln -sf ../../java${destname}/${jarname}.jar %{buildroot}%{ant_home}/lib/${jarname}.jar
 
   #bootstrap does not have a pom
   [ $jarname == ant-bootstrap ] && continue
 
   #install pom
-  install -m 644 src/etc/poms/${jarname}/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/${pomname}
+  install -m 644 src/etc/poms/${jarname}/pom.xml %{buildroot}%{_datadir}/maven2/poms/${pomname}
   %add_to_maven_depmap org.apache.ant ${jarname} %{version} JPP${destname} ${jarname}
 done
 
 #ant-parent pom
-install -m 644 src/etc/poms/pom.xml $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}-parent.pom
+install -m 644 src/etc/poms/pom.xml %{buildroot}%{_datadir}/maven2/poms/JPP-%{name}-parent.pom
 %add_to_maven_depmap org.apache.ant ant-parent %{version} JPP ant-parent
 
 # scripts: remove dos and os/2 scripts
@@ -487,54 +487,54 @@ rm -f src/script/*.bat
 rm -f src/script/*.cmd
 
 # XSLs
-cp -p src/etc/*.xsl $RPM_BUILD_ROOT%{ant_home}/etc
+cp -p src/etc/*.xsl %{buildroot}%{ant_home}/etc
 
 # install everything else
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mkdir -p %{buildroot}%{_bindir}
 %if %without bootstrap
-cp -p src/script/* $RPM_BUILD_ROOT%{_bindir}
+cp -p src/script/* %{buildroot}%{_bindir}
 %else
-cp -p src/script/ant{,Run} $RPM_BUILD_ROOT%{_bindir}
+cp -p src/script/ant{,Run} %{buildroot}%{_bindir}
 %endif
 
 # default ant.conf
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
-cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.conf
+mkdir -p %{buildroot}%{_sysconfdir}
+cp -p %{SOURCE2} %{buildroot}%{_sysconfdir}/%{name}.conf
 
 # OPT_JAR_LIST fragments
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d
-echo "ant/ant-jmf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jmf
-echo "ant/ant-swing" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/swing
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}.d
+echo "ant/ant-jmf" > %{buildroot}%{_sysconfdir}/%{name}.d/jmf
+echo "ant/ant-swing" > %{buildroot}%{_sysconfdir}/%{name}.d/swing
 %if %without bootstrap
-echo "antlr ant/ant-antlr" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/antlr
-echo "bsf ant/ant-apache-bsf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bsf
-echo "xml-commons-resolver ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
-echo "jakarta-commons-logging ant/ant-commons-logging" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-logging
-echo "jakarta-commons-net ant/ant-commons-net" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-net
-#echo "jai ant/ant-jai" > $RPM_BUILD_ROOT%%{_sysconfdir}/%%{name}.d/jai
-echo "bcel ant/ant-apache-bcel" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bcel
-echo "log4j ant/ant-apache-log4j" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-log4j
-echo "oro ant/ant-apache-oro" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-oro
-echo "regexp ant/ant-apache-regexp" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-regexp
-echo "xalan-j2 ant/ant-apache-xalan2" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-xalan2
-echo "javamail jaf ant/ant-javamail" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/javamail
-echo "jdepend ant/ant-jdepend" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jdepend
-echo "jsch ant/ant-jsch" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jsch
-echo "junit ant/ant-junit" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit
-echo "testutil ant/ant-testutil" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/testutil
+echo "antlr ant/ant-antlr" > %{buildroot}%{_sysconfdir}/%{name}.d/antlr
+echo "bsf ant/ant-apache-bsf" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-bsf
+echo "xml-commons-resolver ant/ant-apache-resolver" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-resolver
+echo "jakarta-commons-logging ant/ant-commons-logging" > %{buildroot}%{_sysconfdir}/%{name}.d/commons-logging
+echo "jakarta-commons-net ant/ant-commons-net" > %{buildroot}%{_sysconfdir}/%{name}.d/commons-net
+#echo "jai ant/ant-jai" > %{buildroot}%%{_sysconfdir}/%%{name}.d/jai
+echo "bcel ant/ant-apache-bcel" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-bcel
+echo "log4j ant/ant-apache-log4j" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-log4j
+echo "oro ant/ant-apache-oro" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-oro
+echo "regexp ant/ant-apache-regexp" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-regexp
+echo "xalan-j2 ant/ant-apache-xalan2" > %{buildroot}%{_sysconfdir}/%{name}.d/apache-xalan2
+echo "javamail jaf ant/ant-javamail" > %{buildroot}%{_sysconfdir}/%{name}.d/javamail
+echo "jdepend ant/ant-jdepend" > %{buildroot}%{_sysconfdir}/%{name}.d/jdepend
+echo "jsch ant/ant-jsch" > %{buildroot}%{_sysconfdir}/%{name}.d/jsch
+echo "junit ant/ant-junit" > %{buildroot}%{_sysconfdir}/%{name}.d/junit
+echo "testutil ant/ant-testutil" > %{buildroot}%{_sysconfdir}/%{name}.d/testutil
 %endif
 
 %if %{build_javadoc}
 # javadoc
-mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+mkdir -p %{buildroot}%{_javadocdir}/%{name}
+cp -pr build/javadocs/* %{buildroot}%{_javadocdir}/%{name}
 %endif
 
 # fix link between manual and javadoc
 (cd docs/manual; ln -sf %{_javadocdir}/%{name} api)
 
 %if %with bootstrap
-find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
+find %{buildroot}%{_datadir}/ant/etc -type f -name "*.xsl" \
                                                  -a ! -name ant-update.xsl \
                                                  -a ! -name changelog.xsl \
                                                  -a ! -name coverage-frames.xsl \
@@ -546,7 +546,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %endif
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 # -----------------------------------------------------------------------------
 
