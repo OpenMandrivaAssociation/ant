@@ -52,7 +52,7 @@
 
 Name:           ant
 Version:        1.8.2
-Release:        7
+Release:        8
 Epoch:          0
 Summary:        Build tool for java
 Summary(it):    Tool per la compilazione di programmi java
