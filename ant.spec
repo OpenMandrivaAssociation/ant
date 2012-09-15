@@ -452,6 +452,7 @@ mv LICENSE.utf8 LICENSE
 
 %build
 %if %without bootstrap
+ANT_HOME=/usr/share/ant
 %{ant} jars test-jar
 %if %{build_javadoc}
 export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
