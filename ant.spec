@@ -52,8 +52,6 @@ Version:        1.8.4
 Release:        1
 Epoch:          0
 Summary:        Build tool for java
-Summary(it):    Tool per la compilazione di programmi java
-Summary(fr):    Outil de compilation pour java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
 Group:          Development/Java
@@ -66,7 +64,7 @@ Patch3:         apache-ant-no-test-jar.patch
 Patch4:         apache-ant-class-path-in-manifest.patch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
-BuildRequires:  java-devel >= 0:1.5.0
+BuildRequires:  java-devel >= 0:1.6.0
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  junit
@@ -75,7 +73,7 @@ BuildRequires:  xerces-j2
 %endif
 
 Requires:       jpackage-utils >= 0:1.7.5
-Requires:       java-devel >= 0:1.5.0
+Requires:       java-devel >= 0:1.6.0
 %if %without bootstrap
 Requires:       xerces-j2
 %endif
@@ -89,21 +87,9 @@ Provides:       %{name}-nodeps = %{epoch}:%{version}-%{release}
 Obsoletes:      %{name}-trax < %{epoch}:%{version}-%{release}
 Provides:       %{name}-trax = %{epoch}:%{version}-%{release}
 
-
-
 %description
 Ant is a platform-independent build tool for java. It's used by apache
 jakarta and xml projects.
-
-%description -l fr
-Ant est un outil de compilation multi-plateformes pour java. Il est
-utilisé par les projets apache-jakarta et apache-xml.
-
-%description -l it
-Ant e' un tool indipendente dalla piattaforma creato per faciltare la
-compilazione di programmi java.
-Allo stato attuale viene utilizzato dai progetti apache jakarta ed
-apache xml.
 
 %package jmf
 Summary:        Optional jmf tasks for %{name}
@@ -115,9 +101,6 @@ Provides:       ant-jmf = %{epoch}:%{version}-%{release}
 %description jmf
 Optional jmf tasks for %{name}.
 
-%description jmf -l fr
-Taches jmf optionelles pour %{name}.
-
 %package swing
 Summary:        Optional swing tasks for %{name}
 Group:          Development/Java
@@ -126,9 +109,6 @@ Provides:       ant-swing = %{epoch}:%{version}-%{release}
 
 %description swing
 Optional swing tasks for %{name}.
-
-%description swing -l fr
-Taches swing optionelles pour %{name}.
 
 %if %without bootstrap
 %if %{with_manifest_only}
@@ -160,9 +140,6 @@ Provides:       ant-antlr = %{epoch}:%{version}-%{release}
 %description antlr
 Optional antlr tasks for %{name}.
 
-%description antlr -l fr
-Taches antlr optionelles pour %{name}.
-
 %package apache-bsf
 Summary:        Optional apache bsf tasks for %{name}
 Group:          Development/Java
@@ -173,9 +150,6 @@ Provides:       ant-apache-bsf = %{epoch}:%{version}-%{release}
 
 %description apache-bsf
 Optional apache bsf tasks for %{name}.
-
-%description apache-bsf -l fr
-Taches apache bsf optionelles pour %{name}.
 
 %package apache-resolver
 Summary:        Optional apache resolver tasks for %{name}
@@ -188,22 +162,16 @@ Provides:       ant-apache-resolver = %{epoch}:%{version}-%{release}
 %description apache-resolver
 Optional apache resolver tasks for %{name}.
 
-%description apache-resolver -l fr
-Taches apache resolver optionelles pour %{name}.
-
 %package commons-logging
 Summary:        Optional commons logging tasks for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       apache-commons-logging
-BuildRequires:  apache-commons-logging
+BuildRequires:  jakarta-commons-logging
 Provides:       ant-commons-logging = %{epoch}:%{version}-%{release}
 
 %description commons-logging
 Optional commons logging tasks for %{name}.
-
-%description commons-logging -l fr
-Taches commons logging optionelles pour %{name}.
 
 %package commons-net
 Summary:        Optional commons net tasks for %{name}
@@ -215,9 +183,6 @@ Provides:       ant-commons-net = %{epoch}:%{version}-%{release}
 
 %description commons-net
 Optional commons net tasks for %{name}.
-
-%description commons-net -l fr
-Taches commons net optionelles pour %{name}.
 
 # Disable because we don't ship the dependencies
 %if 0
@@ -231,9 +196,6 @@ Provides:       ant-jai = %{epoch}:%{version}-%{release}
 
 %description jai
 Optional jai tasks for %{name}.
-
-%description jai -l fr
-Taches jai optionelles pour %{name}.
 %endif
 
 %package apache-bcel
@@ -249,9 +211,6 @@ Obsoletes:      ant-jakarta-bcel < %{epoch}:%{version}-%{release}
 %description apache-bcel
 Optional apache bcel tasks for %{name}.
 
-%description apache-bcel -l fr
-Taches apache bcel optionelles pour %{name}.
-
 %package apache-log4j
 Summary:        Optional apache log4j tasks for %{name}
 Group:          Development/Java
@@ -264,9 +223,6 @@ Obsoletes:      ant-jakarta-log4j < %{epoch}:%{version}-%{release}
 
 %description apache-log4j
 Optional apache log4j tasks for %{name}.
-
-%description apache-log4j -l fr
-Taches apache log4j optionelles pour %{name}.
 
 %package apache-oro
 Summary:        Optional apache oro tasks for %{name}
@@ -281,9 +237,6 @@ Obsoletes:      ant-jakarta-oro < %{epoch}:%{version}-%{release}
 %description apache-oro
 Optional apache oro tasks for %{name}.
 
-%description apache-oro -l fr
-Taches apache oro optionelles pour %{name}.
-
 %package apache-regexp
 Summary:        Optional apache regexp tasks for %{name}
 Group:          Development/Java
@@ -297,9 +250,6 @@ Obsoletes:      ant-jakarta-regexp < %{epoch}:%{version}-%{release}
 %description apache-regexp
 Optional apache regexp tasks for %{name}.
 
-%description apache-regexp -l fr
-Taches apache regexp optionelles pour %{name}.
-
 %package apache-xalan2
 Summary:        Optional apache xalan2 tasks for %{name}
 Group:          Development/Java
@@ -312,9 +262,6 @@ Provides:       ant-apache-xalan2 = %{epoch}:%{version}-%{release}
 %description apache-xalan2
 Optional apache xalan2 tasks for %{name}.
 
-%description apache-xalan2 -l fr
-Taches apache xalan2 optionelles pour %{name}.
-
 %package javamail
 Summary:        Optional javamail tasks for %{name}
 Group:          Development/Java
@@ -325,9 +272,6 @@ Provides:       ant-javamail = %{epoch}:%{version}-%{release}
 
 %description javamail
 Optional javamail tasks for %{name}.
-
-%description javamail -l fr
-Taches javamail optionelles pour %{name}.
 
 %package jdepend
 Summary:        Optional jdepend tasks for %{name}
@@ -340,9 +284,6 @@ Provides:       ant-jdepend = %{epoch}:%{version}-%{release}
 %description jdepend
 Optional jdepend tasks for %{name}.
 
-%description jdepend -l fr
-Taches jdepend optionelles pour %{name}.
-
 %package jsch
 Summary:        Optional jsch tasks for %{name}
 Group:          Development/Java
@@ -354,9 +295,6 @@ Provides:       ant-jsch = %{epoch}:%{version}-%{release}
 %description jsch
 Optional jsch tasks for %{name}.
 
-%description jsch -l fr
-Taches jsch optionelles pour %{name}.
-
 %package junit
 Summary:        Optional junit tasks for %{name}
 Group:          Development/Java
@@ -367,9 +305,6 @@ Provides:       ant-junit = %{epoch}:%{version}-%{release}
 
 %description junit
 Optional junit tasks for %{name}.
-
-%description junit -l fr
-Taches junit optionelles pour %{name}.
 
 %package testutil
 Summary:        Test utility classes for %{name}
@@ -392,21 +327,12 @@ Requires:       %{_bindir}/python
 %description scripts
 Additional Perl and Python scripts for %{name}.
 
-%description scripts -l fr
-Scripts additionels pour %{name}.
-
 %package manual
 Summary:        Manual for %{name}
 Group:          Development/Java
 
 %description manual
 Documentation for %{name}.
-
-%description manual -l it
-Documentazione di %{name}.
-
-%description manual -l fr
-Documentation pour %{name}.
 
 %package javadoc
 Summary:        Javadoc for %{name}
@@ -415,8 +341,6 @@ Group:          Development/Java
 %description javadoc
 Javadoc for %{name}.
 
-%description javadoc -l fr
-Javadoc pour %{name}.
 %endif
 
 # -----------------------------------------------------------------------------
@@ -452,7 +376,6 @@ mv LICENSE.utf8 LICENSE
 
 %build
 %if %without bootstrap
-ANT_HOME=/usr/share/ant
 %{ant} jars test-jar
 %if %{build_javadoc}
 export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
