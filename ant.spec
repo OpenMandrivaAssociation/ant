@@ -377,7 +377,7 @@ export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend
 %{ant} javadocs
 %endif
 %else
-export JAVA_HOME=%{java_home}
+export JAVA_HOME=%_prefix/lib/jvm/java-1.6.0/
 export CLASSPATH=$JAVA_HOME/lib/tools.jar
 sh ./build.sh --noconfig jars
 %endif
