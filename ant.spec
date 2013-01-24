@@ -28,17 +28,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define with()          %{expand:%%{?with_%{1}:1}%%{!?with_%{1}:0}}
-%define without()       %{expand:%%{?with_%{1}:0}%%{!?with_%{1}:1}}
-%define bcond_with()    %{expand:%%{?_with_%{1}:%%global with_%{1} 1}}
-%define bcond_without() %{expand:%%{!?_without_%{1}:%%global with_%{1} 1}}
-
-%bcond_with bootstrap
+%bcond_without bootstrap
 
 %if %with bootstrap
-%global build_javadoc        0
+%bcond_with javadoc
 %else
-%global build_javadoc        1
+%bcond_without javadoc
 %endif
 
 %global with_manifest_only 0
@@ -134,7 +129,7 @@ Summary:        Optional antlr tasks for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       antlr
-BuildRequires:  antlr
+BuildRequires:  antlr-java
 Provides:       ant-antlr = %{epoch}:%{version}-%{release}
 
 %description antlr
@@ -377,7 +372,7 @@ mv LICENSE.utf8 LICENSE
 %build
 %if %without bootstrap
 %{ant} jars test-jar
-%if %{build_javadoc}
+%if %{with javadoc}
 export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
 %{ant} javadocs
 %endif
@@ -480,7 +475,7 @@ echo "junit ant/ant-junit4" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit4
 echo "testutil ant/ant-testutil" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/testutil
 %endif
 
-%if %{build_javadoc}
+%if %{with javadoc}
 # javadoc
 mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
@@ -500,6 +495,16 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
                                                  -a ! -name tagdiff.xsl \
                                                  | xargs -t rm
 %endif
+
+# Delete bogus jars that were built, but are dummies because we lack
+# a build dependency
+cd %buildroot%_javadir/ant
+for i in *; do
+	if [ `jar tf $i |grep -v META-INF |wc -l` -eq 0 ]; then
+		rm -f $i
+		rm -f %buildroot%ant_home/lib/$i
+	fi
+done
 
 %files
 %doc KEYS LICENSE NOTICE README WHATSNEW
@@ -653,7 +658,7 @@ find $RPM_BUILD_ROOT%{_datadir}/ant/etc -type f -name "*.xsl" \
 %files manual
 %doc manual/*
 
-%if %{build_javadoc}
+%if %{with javadoc}
 %files javadoc
 %{_javadocdir}/%{name}
 %endif
