@@ -59,7 +59,7 @@ Patch3:         apache-ant-no-test-jar.patch
 Patch4:         apache-ant-class-path-in-manifest.patch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
-BuildRequires:  java-devel >= 0:1.6.0
+BuildRequires:  java-1.6.0-openjdk-devel
 %if %without bootstrap
 BuildRequires:  ant
 BuildRequires:  junit
