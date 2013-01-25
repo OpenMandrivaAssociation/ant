@@ -1,34 +1,11 @@
-# Copyright (c) 2000-2008, JPackage Project
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the
-#    distribution.
-# 3. Neither the name of the JPackage Project nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-
-%bcond_without bootstrap
+%bcond_with bootstrap
+# junit4 has lots of build dependencies that in turn need more than the
+# bootstrap version of ant.
+# Full bootstrap is in 3 steps:
+# - ant --with bootstrap --without junit4
+# - ant --without bootstrap --without junit4
+# - ant --without bootstrap --with-junit4
+%bcond_with junit4
 
 %if %with bootstrap
 %bcond_with javadoc
@@ -44,7 +21,7 @@
 
 Name:           ant
 Version:        1.8.4
-Release:        1
+Release:        2
 Epoch:          0
 Summary:        Build tool for java
 License:        ASL 2.0
@@ -62,7 +39,7 @@ BuildRequires:  jpackage-utils >= 0:1.7.5
 BuildRequires:  java-1.6.0-openjdk-devel
 %if %without bootstrap
 BuildRequires:  ant
-BuildRequires:  junit
+BuildRequires:  junit3
 BuildRequires:  xalan-j2
 BuildRequires:  xerces-j2
 %endif
@@ -249,8 +226,7 @@ Optional apache regexp tasks for %{name}.
 Summary:        Optional apache xalan2 tasks for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       regexp
-BuildRequires:  regexp
+BuildRequires:  xalan-j2
 Requires:       xalan-j2
 Provides:       ant-apache-xalan2 = %{epoch}:%{version}-%{release}
 
@@ -305,7 +281,7 @@ Optional junit tasks for %{name}.
 Summary:        Test utility classes for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       junit
+Requires:       junit3
 Provides:       ant-testutil = %{epoch}:%{version}-%{release}
 
 %description testutil
@@ -471,7 +447,9 @@ echo "javamail jaf ant/ant-javamail" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/j
 echo "jdepend ant/ant-jdepend" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jdepend
 echo "jsch ant/ant-jsch" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jsch
 echo "junit ant/ant-junit" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit
+%if %with junit4
 echo "junit ant/ant-junit4" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit4
+%endif
 echo "testutil ant/ant-testutil" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/testutil
 %endif
 
@@ -638,11 +616,13 @@ done
 
 %files junit
 %{_javadir}/%{name}/%{name}-junit.jar
-%{_javadir}/%{name}/%{name}-junit4.jar
 %{ant_home}/lib/%{name}-junit.jar
-%{ant_home}/lib/%{name}-junit4.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/junit
+%if %with junit4
+%{_javadir}/%{name}/%{name}-junit4.jar
+%{ant_home}/lib/%{name}-junit4.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/junit4
+%endif
 %{ant_home}/etc/junit-frames.xsl
 %{ant_home}/etc/junit-noframes.xsl
 
