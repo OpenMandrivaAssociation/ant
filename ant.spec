@@ -346,15 +346,15 @@ iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
-%if %without bootstrap
-%{ant} jars test-jar
-%if %{with javadoc}
-export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
-%{ant} javadocs
-%endif
-%else
 export JAVA_HOME=%_prefix/lib/jvm/java-1.6.0/
 export CLASSPATH=$JAVA_HOME/lib/tools.jar
+%if %without bootstrap
+ant jars test-jar
+%if %{with javadoc}
+export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
+ant javadocs
+%endif
+%else
 sh ./build.sh --noconfig jars
 %endif
 
