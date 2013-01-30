@@ -43,6 +43,9 @@ BuildRequires:  junit3
 BuildRequires:  xalan-j2
 BuildRequires:  xerces-j2
 %endif
+%if %with junit4
+BuildRequires:	junit >= 4.0
+%endif
 
 Requires:       jpackage-utils >= 0:1.7.5
 Requires:       java-devel >= 0:1.6.0
