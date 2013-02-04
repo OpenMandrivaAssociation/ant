@@ -29,6 +29,7 @@ URL:            http://ant.apache.org/
 Group:          Development/Java
 Source0:        http://www.apache.org/dist/ant/source/apache-ant-%{version}-src.tar.bz2
 Source2:        apache-ant-%{major_version}.ant.conf
+Source100:		ant.rpmlintrc
 
 # Fix some places where copies of classes are included in the wrong jarfiles
 Patch1:         apache-ant-bz163689.patch
