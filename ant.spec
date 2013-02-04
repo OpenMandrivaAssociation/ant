@@ -339,7 +339,11 @@ find . -name "*.jar" | %{_bindir}/xargs -t rm
 
 #install jars
 %if %without bootstrap
-build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
+%if %with junit4
+build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit4 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
+%else
+build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit3 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
+%endif
 %endif
 
 # Fix file-not-utf8 rpmlint warning
@@ -354,7 +358,11 @@ export CLASSPATH=$JAVA_HOME/lib/tools.jar
 %if %without bootstrap
 ant jars test-jar
 %if %{with javadoc}
-export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
+%if %with junit4
+export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit4 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
+%else
+export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit3 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
+%endif
 ant javadocs
 %endif
 %else
