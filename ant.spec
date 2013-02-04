@@ -274,7 +274,7 @@ Optional jsch tasks for %{name}.
 Summary:        Optional junit tasks for %{name}
 Group:          Development/Java
 Requires:       %{name} = %{epoch}:%{version}-%{release}
-Requires:       junit
+Requires:       junit3
 Requires:       xalan-j2
 Provides:       ant-junit = %{epoch}:%{version}-%{release}
 
