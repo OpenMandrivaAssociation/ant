@@ -1,2 +1,2 @@
 
-addFilter("E: devel-dependency (Badness: 1) java-devel")
+addFilter("E: devel-dependency")
