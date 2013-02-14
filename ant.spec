@@ -1,4 +1,4 @@
-%bcond_without bootstrap
+%bcond_with bootstrap
 # junit4 has lots of build dependencies that in turn need more than the
 # bootstrap version of ant.
 # Full bootstrap is in 3 steps:
@@ -21,7 +21,7 @@
 
 Name:           ant
 Version:        1.8.4
-Release:        2
+Release:        3
 Epoch:          0
 Summary:        Build tool for java
 License:        ASL 2.0
