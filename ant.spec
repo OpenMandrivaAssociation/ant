@@ -1,4 +1,4 @@
-%bcond_with bootstrap
+%bcond_without bootstrap
 # junit4 has lots of build dependencies that in turn need more than the
 # bootstrap version of ant.
 # Full bootstrap is in 3 steps:
