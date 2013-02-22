@@ -37,7 +37,7 @@ Patch4:		apache-ant-class-path-in-manifest.patch
 BuildArch:	noarch
 
 BuildRequires:	jpackage-utils >= 0:1.7.5
-BuildRequires:	java-1.6.0-openjdk-devel
+BuildRequires:	java-1.7.0-openjdk-devel
 %if %without bootstrap
 BuildRequires:	ant
 BuildRequires:	junit3
@@ -345,7 +345,7 @@ iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
-export JAVA_HOME=%_prefix/lib/jvm/java-1.6.0/
+export JAVA_HOME=%{_jvmdir}/java-1.7.0
 export CLASSPATH=$JAVA_HOME/lib/tools.jar
 %if %without bootstrap
 ant jars test-jar
