@@ -1,4 +1,4 @@
-%bcond_without bootstrap
+%bcond_with bootstrap
 # junit4 has lots of build dependencies that in turn need more than the
 # bootstrap version of ant.
 # Full bootstrap is in 3 steps:
@@ -45,7 +45,7 @@ BuildRequires:	xalan-j2
 BuildRequires:	xerces-j2
 %endif
 %if %with junit4
-#BuildRequires:	junit >= 4.0
+BuildRequires:	junit >= 4.0
 %endif
 
 Requires:	jpackage-utils >= 0:1.7.5
@@ -332,7 +332,7 @@ find . -name "*.jar" | %{_bindir}/xargs -t rm
 #install jars
 %if %without bootstrap
 %if %with junit4
-build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit4 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
+build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
 %else
 build-jar-repository -s -p lib/optional xerces-j2 antlr bcel javamail/mailapi jdepend junit3 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver
 %endif
