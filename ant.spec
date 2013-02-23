@@ -23,7 +23,7 @@ Summary:	Build tool for java
 Name:		ant
 Epoch:		0
 Version:	1.8.4
-Release:	3
+Release:	4
 License:	ASL 2.0
 Group:		Development/Java
 Url:		http://ant.apache.org/
@@ -37,7 +37,7 @@ Patch4:		apache-ant-class-path-in-manifest.patch
 BuildArch:	noarch
 
 BuildRequires:	jpackage-utils >= 0:1.7.5
-BuildRequires:	java-1.6.0-openjdk-devel
+BuildRequires:	java-1.7.0-openjdk-devel
 %if %without bootstrap
 BuildRequires:	ant
 BuildRequires:	junit3
@@ -345,13 +345,13 @@ iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
-export JAVA_HOME=%_prefix/lib/jvm/java-1.6.0/
+export JAVA_HOME=%{_jvmdir}/java-1.7.0
 export CLASSPATH=$JAVA_HOME/lib/tools.jar
 %if %without bootstrap
 ant jars test-jar
 %if %{with javadoc}
 %if %with junit4
-export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit4 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
+export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
 %else
 export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit3 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
 %endif
