@@ -7,6 +7,9 @@
 # - ant --without bootstrap --with-junit4
 %bcond_without junit4
 
+# Disabled by default because we don't ship the dependencies
+%bcond_with jai
+
 %if %with bootstrap
 %bcond_with javadoc
 %else
@@ -23,7 +26,7 @@ Summary:	Build tool for java
 Name:		ant
 Epoch:		0
 Version:	1.8.4
-Release:	5
+Release:	6
 License:	ASL 2.0
 Group:		Development/Java
 Url:		http://ant.apache.org/
@@ -53,8 +56,12 @@ Requires:	java-devel >= 0:1.6.0
 %if %without bootstrap
 Requires:	xerces-j2
 %endif
-# Allow subpackages not in RHEL to be installed from JPackage
-Provides:	%{name} = %{EVRD}
+# JPackage calls ant without the plugins (equivalent of our ant package)
+# ant-nodeps, and has an ant metapackage requiring ant-nodeps and all plugins.
+# Let's try to be compatible...
+Provides:	ant-nodeps = %EVRD
+# Trax has been merged into core ant as of 1.8.1
+Provides:	ant-trax = %EVRD
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
@@ -64,8 +71,6 @@ jakarta and xml projects.
 Summary:	Optional jmf tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
-Requires:	%{name}-nodeps = %{EVRD}
-Provides:	ant-jmf = %{EVRD}
 
 %description jmf
 Optional jmf tasks for %{name}.
@@ -74,7 +79,6 @@ Optional jmf tasks for %{name}.
 Summary:	Optional swing tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
-Provides:	ant-swing = %{EVRD}
 
 %description swing
 Optional swing tasks for %{name}.
@@ -102,9 +106,8 @@ Manifest-only jars for %{name}.
 Summary:	Optional antlr tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
-Requires:	antlr
+Requires:	antlr antlr-java
 BuildRequires:	antlr-java
-Provides:	ant-antlr = %{EVRD}
 
 %description antlr
 Optional antlr tasks for %{name}.
@@ -115,7 +118,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	bsf
 BuildRequires:	bsf
-Provides:	ant-apache-bsf = %{EVRD}
 
 %description apache-bsf
 Optional apache bsf tasks for %{name}.
@@ -126,7 +128,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	xml-commons-resolver
 BuildRequires:	xml-commons-resolver
-Provides:	ant-apache-resolver = %{EVRD}
 
 %description apache-resolver
 Optional apache resolver tasks for %{name}.
@@ -135,9 +136,6 @@ Optional apache resolver tasks for %{name}.
 Summary:	Optional commons logging tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
-Requires:	apache-commons-logging
-BuildRequires:	jakarta-commons-logging
-Provides:	ant-commons-logging = %{EVRD}
 
 %description commons-logging
 Optional commons logging tasks for %{name}.
@@ -148,20 +146,17 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	apache-commons-net
 BuildRequires:	apache-commons-net
-Provides:	ant-commons-net = %{EVRD}
 
 %description commons-net
 Optional commons net tasks for %{name}.
 
-# Disable because we don't ship the dependencies
-%if 0
+%if %{with jai}
 %package jai
 Summary:	Optional jai tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	jai
 BuildRequires:	jai
-Provides:	ant-jai = %{EVRD}
 
 %description jai
 Optional jai tasks for %{name}.
@@ -173,7 +168,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	bcel
 BuildRequires:	bcel
-Provides:	ant-apache-bcel = %{EVRD}
 Provides:	ant-jakarta-bcel = %{EVRD}
 Obsoletes:	ant-jakarta-bcel < %{EVRD}
 
@@ -186,7 +180,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	log4j
 BuildRequires:	log4j
-Provides:	ant-apache-log4j = %{EVRD}
 Provides:	ant-jakarta-log4j = %{EVRD}
 Obsoletes:	ant-jakarta-log4j < %{EVRD}
 
@@ -199,7 +192,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	jakarta-oro
 BuildRequires:	jakarta-oro
-Provides:	ant-apache-oro = %{EVRD}
 Provides:	ant-jakarta-oro = %{EVRD}
 Obsoletes:	ant-jakarta-oro < %{EVRD}
 
@@ -212,7 +204,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	regexp
 BuildRequires:	regexp
-Provides:	ant-apache-regexp = %{EVRD}
 Provides:	ant-jakarta-regexp = %{EVRD}
 Obsoletes:	ant-jakarta-regexp < %{EVRD}
 
@@ -225,7 +216,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 BuildRequires:	xalan-j2
 Requires:	xalan-j2
-Provides:	ant-apache-xalan2 = %{EVRD}
 
 %description apache-xalan2
 Optional apache xalan2 tasks for %{name}.
@@ -236,7 +226,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	javamail >= 0:1.2-5jpp
 BuildRequires:	javamail >= 0:1.2-5jpp
-Provides:	ant-javamail = %{EVRD}
 
 %description javamail
 Optional javamail tasks for %{name}.
@@ -247,7 +236,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	jdepend
 BuildRequires:	jdepend
-Provides:	ant-jdepend = %{EVRD}
 
 %description jdepend
 Optional jdepend tasks for %{name}.
@@ -258,7 +246,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	jsch
 BuildRequires:	jsch
-Provides:	ant-jsch = %{EVRD}
 
 %description jsch
 Optional jsch tasks for %{name}.
@@ -269,7 +256,6 @@ Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	junit3
 Requires:	xalan-j2
-Provides:	ant-junit = %{EVRD}
 
 %description junit
 Optional junit tasks for %{name}.
@@ -279,7 +265,6 @@ Summary:	Test utility classes for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	junit3
-Provides:	ant-testutil = %{EVRD}
 
 %description testutil
 Test utility tasks for %{name}.
