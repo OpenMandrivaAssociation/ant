@@ -26,7 +26,7 @@ Summary:	Build tool for java
 Name:		ant
 Epoch:		0
 Version:	1.8.4
-Release:	10
+Release:	11
 License:	ASL 2.0
 Group:		Development/Java
 Url:		http://ant.apache.org/
