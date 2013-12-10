@@ -28,7 +28,7 @@ Summary:	Build tool for java
 Name:		ant
 Epoch:		0
 Version:	1.8.4
-Release:	12
+Release:	13
 License:	ASL 2.0
 Group:		Development/Java
 Url:		http://ant.apache.org/
@@ -277,8 +277,6 @@ Summary:	Additional scripts for %{name}
 Group:		Development/Java
 AutoReqProv:	no
 Requires:	%{name} = %{EVRD}
-Requires:	%{_bindir}/perl
-Requires:	%{_bindir}/python
 
 %description scripts
 Additional Perl and Python scripts for %{name}.
