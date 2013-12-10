@@ -1,3 +1,5 @@
+%define openjdk_version		1.7.0
+
 %bcond_with bootstrap
 # junit4 has lots of build dependencies that in turn need more than the
 # bootstrap version of ant.
@@ -330,17 +332,17 @@ iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
-export JAVA_HOME=%{_jvmdir}/java-1.6.0
+export JAVA_HOME=%{_jvmdir}/java-%{openjdk_version}
 export CLASSPATH=$JAVA_HOME/lib/tools.jar
 %if %without bootstrap
-ant jars test-jar
+%ant jars test-jar
 %if %{with javadoc}
 %if %with junit4
 export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
 %else
 export CLASSPATH=$(build-classpath xerces-j2 antlr bcel javamail/mailapi jdepend junit3 log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver)
 %endif
-ant javadocs
+%ant javadocs
 %endif
 %else
 sh ./build.sh --noconfig jars
