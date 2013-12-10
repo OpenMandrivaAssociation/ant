@@ -43,6 +43,7 @@ BuildArch:	noarch
 
 BuildRequires:	jpackage-utils
 BuildRequires:	java-devel
+BuildRequires:	javapackages-tools
 %if %without bootstrap
 BuildRequires:	ant
 BuildRequires:	junit3
