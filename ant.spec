@@ -106,7 +106,7 @@ Manifest-only jars for %{name}.
 Summary:	Optional antlr tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
-Requires:	antlr antlr-tools
+Requires:	antlr antlr-tool
 BuildRequires:	antlr-tools
 
 %description antlr
