@@ -39,8 +39,8 @@ Patch3:		apache-ant-no-test-jar.patch
 Patch4:		apache-ant-class-path-in-manifest.patch
 BuildArch:	noarch
 
-BuildRequires:	jpackage-utils >= 0:1.7.5
-BuildRequires:	java-1.6.0-openjdk-devel
+BuildRequires:	jpackage-utils
+BuildRequires:	java-devel
 %if %without bootstrap
 BuildRequires:	ant
 BuildRequires:	junit3
@@ -51,8 +51,8 @@ BuildRequires:	xerces-j2
 BuildRequires:	junit >= 4.0
 %endif
 
-Requires:	jpackage-utils >= 0:1.7.5
-Requires:	java-devel >= 0:1.6.0
+Requires:	jpackage-utils
+Requires:	java-devel
 %if %without bootstrap
 Requires:	xerces-j2
 %endif
