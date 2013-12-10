@@ -26,7 +26,7 @@ Summary:	Build tool for java
 Name:		ant
 Epoch:		0
 Version:	1.8.4
-Release:	11
+Release:	12
 License:	ASL 2.0
 Group:		Development/Java
 Url:		http://ant.apache.org/
@@ -106,8 +106,8 @@ Manifest-only jars for %{name}.
 Summary:	Optional antlr tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
-Requires:	antlr antlr-java
-BuildRequires:	antlr-java
+Requires:	antlr antlr-tools
+BuildRequires:	antlr-tools
 
 %description antlr
 Optional antlr tasks for %{name}.
