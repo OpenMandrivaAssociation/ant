@@ -107,7 +107,7 @@ Summary:	Optional antlr tasks for %{name}
 Group:		Development/Java
 Requires:	%{name} = %{EVRD}
 Requires:	antlr antlr-tool
-BuildRequires:	antlr-tools
+BuildRequires:	antlr-tool
 
 %description antlr
 Optional antlr tasks for %{name}.
