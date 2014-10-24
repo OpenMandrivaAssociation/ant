@@ -37,7 +37,7 @@
 
 Name:           ant
 Version:        1.9.2
-Release:        7.1%{?dist}
+Release:        7.2%{?dist}
 Epoch:          0
 Summary:        Build tool for java
 Summary(it):    Tool per la compilazione di programmi java
