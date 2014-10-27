@@ -29,15 +29,15 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%bcond_without tests
+%bcond_with tests
 %bcond_without javadoc
 
 %global ant_home %{_datadir}/ant
 %global major_version 1.8
 
 Name:           ant
-Version:        1.9.2
-Release:        7.2%{?dist}
+Version:        1.9.4
+Release:        1.0%{?dist}
 Epoch:          0
 Summary:        Build tool for java
 Summary(it):    Tool per la compilazione di programmi java
