@@ -36,8 +36,8 @@
 %global major_version 1.8
 
 Name:           ant
-Version:        1.9.4
-Release:        1.1%{?dist}
+Version:        1.9.6
+Release:        1.1
 Epoch:          0
 Summary:        Build tool for java
 Summary(it):    Tool per la compilazione di programmi java
