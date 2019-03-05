@@ -2,7 +2,7 @@
 # Bootstrapping jpackage stuff is a giant mess. Ant can be built without it,
 # but then doesn't provide all the mvn(*) dependencies jpackage is so fond
 # of.
-%bcond_without jpackage
+%bcond_with jpackage
 
 %global ant_home %{_datadir}/ant
 %global major_version 1.8
