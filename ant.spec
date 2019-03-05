@@ -1,11 +1,15 @@
 %bcond_without bootstrap
+# Bootstrapping jpackage stuff is a giant mess. Ant can be built without it,
+# but then doesn't provide all the mvn(*) dependencies jpackage is so fond
+# of.
+%bcond_without jpackage
 
 %global ant_home %{_datadir}/ant
 %global major_version 1.8
 
 Name:           ant
 Version:        1.10.5
-Release:        1
+Release:        2
 Summary:        Build tool for java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
@@ -19,6 +23,10 @@ BuildRequires:  java-devel >= 0:1.5.0
 Requires:       java-devel >= 0:1.5.0
 
 BuildArch:      noarch
+
+%if %{with jpackage}
+BuildRequires:	javapackages-local
+%endif
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
@@ -275,6 +283,31 @@ done
 mkdir -p %{buildroot}%{_bindir} %{buildroot}%{_datadir}/ant/lib
 cp dist/bin/ant %{buildroot}%{_bindir}
 cp dist/lib/*.jar %{buildroot}%{_datadir}/ant/lib
+
+%if %{with jpackage}
+%mvn_alias :ant org.apache.ant:ant-nodeps apache:ant ant:ant
+%mvn_alias :ant-launcher ant:ant-launcher
+%mvn_file ':%{ant,ant-bootstrap,ant-launcher}' %{name}/@1 @1
+
+for jar in dist/lib/*.jar; do
+	jarname=$(basename $jar .jar)
+	pom=src/etc/poms/${jarname}/pom.xml
+	[ "$jarname" == ant-bootstrap ] && pom='org.apache.ant:ant-bootstrap:%{version}'
+echo ${pom} ${jar}
+	%mvn_artifact ${pom} ${jar}
+done
+
+# ant-parent
+%mvn_artifact src/etc/poms/pom.xml
+
+%mvn_package :ant lib
+%mvn_package :ant-launcher lib
+%mvn_package :ant-bootstrap lib
+%mvn_package :ant-parent lib
+%mvn_package :ant-junit4 junit
+%mvn_package ':ant-{*}' @1
+%mvn_install
+%endif
 
 %if %with javadoc
 # javadoc
