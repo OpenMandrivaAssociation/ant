@@ -34,6 +34,9 @@ BuildRequires:	javapackages-local
 %if ! %{with antlr}
 BuildRequires:  antlr
 %endif
+%if ! %{with bootstrap}
+BuildRequires:	junit
+%endif
 
 %description
 Ant is a platform-independent build tool for java. It's used by apache
