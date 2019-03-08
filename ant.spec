@@ -1,20 +1,24 @@
-%bcond_without bootstrap
+%bcond_with bootstrap
 # Bootstrapping jpackage stuff is a giant mess. Ant can be built without it,
 # but then doesn't provide all the mvn(*) dependencies jpackage is so fond
 # of.
-%bcond_with jpackage
+%bcond_without jpackage
+# Optional dependencies...
+%bcond_with antlr
 
 %global ant_home %{_datadir}/ant
 %global major_version 1.8
 
 Name:           ant
 Version:        1.10.5
-Release:        2
+Release:        3
 Summary:        Build tool for java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
 Source0:        http://archive.apache.org/dist/ant/source/apache-ant-%{version}-src.tar.bz2
 Patch0:		ant-1.10.5-drop-windows-and-osx-support.patch
+# Avoids dependency on junit while bootstrapping
+Patch1:		ant-1.10.5-no-test-jar.patch
 
 # Fix some places where copies of classes are included in the wrong jarfiles
 #Patch0:         apache-ant-class-path-in-manifest.patch
@@ -26,6 +30,9 @@ BuildArch:      noarch
 
 %if %{with jpackage}
 BuildRequires:	javapackages-local
+%endif
+%if ! %{with antlr}
+BuildRequires:  antlr
 %endif
 
 %description
@@ -50,9 +57,6 @@ Optional swing tasks for %{name}.
 Summary:        Optional antlr tasks for %{name}
 Requires:       %{name} = %{EVRD}
 Requires:       antlr
-%if ! %{with bootstrap}
-BuildRequires:  antlr
-%endif
 
 %description antlr
 Optional antlr tasks for %{name}.
@@ -257,7 +261,12 @@ rm src/tests/junit/org/apache/tools/ant/types/selectors/SignedSelectorTest.java 
 
 %if ! %{with bootstrap}
 #install jars
-build-jar-repository -s -p lib/optional antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver xalan-j2-serializer xerces-j2 xml-commons-apis
+DEPS="bcel jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver xalan-j2-serializer xerces-j2 xml-commons-apis"
+%if %{with antlr}
+DEPS="antlr $DEPS"
+%endif
+# DEPS="$DEPS javamail/mailapi"
+build-jar-repository -s -p lib/optional $DEPS
 %endif
 
 # Fix file-not-utf8 rpmlint warning
@@ -306,7 +315,7 @@ done
 %mvn_package :ant-parent lib
 %mvn_package :ant-junit4 junit
 %mvn_package ':ant-{*}' @1
-%mvn_install
+#mvn_install
 %endif
 
 %if %with javadoc
@@ -333,7 +342,7 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %files junit
 %{_datadir}/ant/lib/ant-junit.jar
 %{_datadir}/ant/lib/ant-junit4.jar
-%{_datadir}/ant/lib/ant-junitlauncher.jar
+#{_datadir}/ant/lib/ant-junitlauncher.jar
 
 %files jmf
 %{_datadir}/ant/lib/%{name}-jmf.jar
@@ -341,30 +350,30 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %files swing
 %{_datadir}/ant/lib/%{name}-swing.jar
 
+%if 0
 %files testutil
 %{_datadir}/ant/lib/%{name}-testutil.jar
+%endif
 
 %if ! %{with bootstrap}
+%if %{with antlr}
 %files antlr
 %{ant_home}/lib/%{name}-antlr.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/antlr
+%endif
 
 %files apache-bsf
 %{ant_home}/lib/%{name}-apache-bsf.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-bsf
 
 %files apache-resolver
 %{ant_home}/lib/%{name}-apache-resolver.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-resolver
 
 %files commons-logging
 %defattr(-,root,root,-)
 %{ant_home}/lib/%{name}-commons-logging.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/commons-logging
 
 %files commons-net
 %{ant_home}/lib/%{name}-commons-net.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/commons-net
 
 # Disable as we dont ship the dependencies
 %if 0
@@ -375,38 +384,30 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 %files apache-bcel
 %{ant_home}/lib/%{name}-apache-bcel.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-bcel
 
 %files apache-log4j
 %{ant_home}/lib/%{name}-apache-log4j.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-log4j
 
 %files apache-oro
 %{ant_home}/lib/%{name}-apache-oro.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-oro
-%{ant_home}/etc/maudit-frames.xsl
 
 %files apache-regexp
 %{ant_home}/lib/%{name}-apache-regexp.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-regexp
 
 %files apache-xalan2
 %{ant_home}/lib/%{name}-apache-xalan2.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/apache-xalan2
 
+%if 0
 %files javamail
 %{ant_home}/lib/%{name}-javamail.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/javamail
+%endif
 
 %files jdepend
 %{ant_home}/lib/%{name}-jdepend.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/jdepend
-%{ant_home}/etc/jdepend.xsl
-%{ant_home}/etc/jdepend-frames.xsl
 
 %files jsch
 %{ant_home}/lib/%{name}-jsch.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/jsch
 
 %files manual
 %doc LICENSE NOTICE
