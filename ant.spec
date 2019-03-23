@@ -11,7 +11,7 @@
 
 Name:           ant
 Version:        1.10.5
-Release:        3
+Release:        4
 Summary:        Build tool for java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
@@ -23,8 +23,7 @@ Patch1:		ant-1.10.5-no-test-jar.patch
 # Fix some places where copies of classes are included in the wrong jarfiles
 #Patch0:         apache-ant-class-path-in-manifest.patch
 
-BuildRequires:  java-devel >= 0:1.5.0
-Requires:       java-devel >= 0:1.5.0
+BuildRequires:  java-12-openjdk-devel
 
 BuildArch:      noarch
 
@@ -279,7 +278,7 @@ iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+. /etc/profile.d/90java.sh
 ./bootstrap.sh
 ./build.sh
 
@@ -318,7 +317,11 @@ done
 %mvn_package :ant-parent lib
 %mvn_package :ant-junit4 junit
 %mvn_package ':ant-{*}' @1
-#mvn_install
+# FIXME workaround until fixed xmvn has been bootstrapped correctly
+pwd
+ls -l .xmvn-reactor
+while grep -q ns0:optional .xmvn-reactor; do sed -i -e '/ns0:optional/d' .xmvn-reactor; done
+%mvn_install
 %endif
 
 %if %with javadoc
@@ -332,7 +335,7 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{ant} test
 %endif
 
-%files
+%files -f .mfiles-lib
 %doc KEYS LICENSE NOTICE README WHATSNEW
 %attr(0755,root,root) %{_bindir}/ant
 %dir %{_datadir}/ant
@@ -342,74 +345,73 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 # Some modules get built even in bootstrap mode because of
 # prebuilt jars
-%files junit
+%files junit -f .mfiles-junit
 %{_datadir}/ant/lib/ant-junit.jar
 %{_datadir}/ant/lib/ant-junit4.jar
-#{_datadir}/ant/lib/ant-junitlauncher.jar
 
-%files jmf
+%files jmf -f .mfiles-jmf
 %{_datadir}/ant/lib/%{name}-jmf.jar
 
-%files swing
+%files swing -f .mfiles-swing
 %{_datadir}/ant/lib/%{name}-swing.jar
 
 %if 0
-%files testutil
+%files testutil -f .mfiles-testutil
 %{_datadir}/ant/lib/%{name}-testutil.jar
 %endif
 
 %if ! %{with bootstrap}
 %if %{with antlr}
-%files antlr
+%files antlr -f .mfiles-antlr
 %{ant_home}/lib/%{name}-antlr.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/antlr
 %endif
 
-%files apache-bsf
+%files apache-bsf -f .mfiles-apache-bsf
 %{ant_home}/lib/%{name}-apache-bsf.jar
 
-%files apache-resolver
+%files apache-resolver -f .mfiles-apache-resolver
 %{ant_home}/lib/%{name}-apache-resolver.jar
 
-%files commons-logging
+%files commons-logging -f .mfiles-commons-logging
 %defattr(-,root,root,-)
 %{ant_home}/lib/%{name}-commons-logging.jar
 
-%files commons-net
+%files commons-net -f .mfiles-commons-net
 %{ant_home}/lib/%{name}-commons-net.jar
 
 # Disable as we dont ship the dependencies
 %if 0
-%files jai
+%files jai -f .mfiles-jai
 %{ant_home}/lib/%{name}-jai.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/jai
 %endif
 
-%files apache-bcel
+%files apache-bcel -f .mfiles-apache-bcel
 %{ant_home}/lib/%{name}-apache-bcel.jar
 
-%files apache-log4j
+%files apache-log4j -f .mfiles-apache-log4j
 %{ant_home}/lib/%{name}-apache-log4j.jar
 
-%files apache-oro
+%files apache-oro -f .mfiles-apache-oro
 %{ant_home}/lib/%{name}-apache-oro.jar
 
-%files apache-regexp
+%files apache-regexp -f .mfiles-apache-regexp
 %{ant_home}/lib/%{name}-apache-regexp.jar
 
-%files apache-xalan2
+%files apache-xalan2 -f .mfiles-apache-xalan2
 %{ant_home}/lib/%{name}-apache-xalan2.jar
 
 %if 0
-%files javamail
+%files javamail -f .mfiles-javamail
 %{ant_home}/lib/%{name}-javamail.jar
 %config(noreplace) %{_sysconfdir}/%{name}.d/javamail
 %endif
 
-%files jdepend
+%files jdepend -f .mfiles-jdepend
 %{ant_home}/lib/%{name}-jdepend.jar
 
-%files jsch
+%files jsch -f .mfiles-jsch
 %{ant_home}/lib/%{name}-jsch.jar
 
 %files manual
@@ -417,7 +419,7 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc manual/*
 
 %if %with javadoc
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE NOTICE
 %{_javadocdir}/%{name}
 %endif
