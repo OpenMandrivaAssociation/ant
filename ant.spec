@@ -23,7 +23,7 @@ Patch1:		ant-1.10.5-no-test-jar.patch
 # Fix some places where copies of classes are included in the wrong jarfiles
 #Patch0:         apache-ant-class-path-in-manifest.patch
 
-BuildRequires:  java-12-openjdk-devel
+BuildRequires:  jdk-current >= 12.33-5
 
 BuildArch:      noarch
 
