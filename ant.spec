@@ -4,14 +4,14 @@
 # of.
 %bcond_without jpackage
 # Optional dependencies...
-%bcond_with antlr
+%bcond_without antlr
 
 %global ant_home %{_datadir}/ant
 %global major_version 1.8
 
 Name:           ant
 Version:        1.10.5
-Release:        4
+Release:        5
 Summary:        Build tool for java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
@@ -364,7 +364,6 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %if %{with antlr}
 %files antlr -f .mfiles-antlr
 %{ant_home}/lib/%{name}-antlr.jar
-%config(noreplace) %{_sysconfdir}/%{name}.d/antlr
 %endif
 
 %files apache-bsf -f .mfiles-apache-bsf
