@@ -31,7 +31,7 @@ BuildArch:      noarch
 BuildRequires:	javapackages-local
 %endif
 %if ! %{with antlr}
-BuildRequires:  antlr
+BuildRequires:  antlr antlr-tool
 %endif
 %if ! %{with bootstrap}
 BuildRequires:	junit
