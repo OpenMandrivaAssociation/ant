@@ -11,7 +11,7 @@
 
 Name:           ant
 Version:        1.10.5
-Release:        5
+Release:        6
 Summary:        Build tool for java
 License:        ASL 2.0
 URL:            http://ant.apache.org/
