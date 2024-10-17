@@ -14,7 +14,7 @@ Version:        1.10.5
 Release:        6
 Summary:        Build tool for java
 License:        ASL 2.0
-URL:            http://ant.apache.org/
+URL:            https://ant.apache.org/
 Source0:        http://archive.apache.org/dist/ant/source/apache-ant-%{version}-src.tar.bz2
 Patch0:		ant-1.10.5-drop-windows-and-osx-support.patch
 # Avoids dependency on junit while bootstrapping
