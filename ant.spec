@@ -37,6 +37,8 @@ BuildRequires:  antlr antlr-tool
 BuildRequires:	junit
 %endif
 
+BuildRequires:	locales-extra-charsets
+
 %description
 Ant is a platform-independent build tool for java. It's used by apache
 jakarta and xml projects.
