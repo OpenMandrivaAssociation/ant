@@ -1,12 +1,12 @@
-diff -up apache-ant-1.10.5/build.xml.omv~ apache-ant-1.10.5/build.xml
---- apache-ant-1.10.5/build.xml.omv~	2019-03-08 18:36:57.913287600 +0100
-+++ apache-ant-1.10.5/build.xml	2019-03-08 18:37:08.344447143 +0100
-@@ -892,7 +892,7 @@
+diff -up apache-ant-1.10.15/build.xml.2~ apache-ant-1.10.15/build.xml
+--- apache-ant-1.10.15/build.xml.2~	2024-12-01 23:16:54.884001953 +0100
++++ apache-ant-1.10.15/build.xml	2024-12-01 23:17:17.064268134 +0100
+@@ -1030,7 +1030,7 @@
           Create the essential distribution that can run Apache Ant
         ===================================================================
    -->
--  <target name="dist-lite" depends="jars,test-jar"
-+  <target name="dist-lite" depends="jars"
+-  <target name="dist-lite" depends="jars,test-jar,-ant-dist-warn-jdk9+"
++  <target name="dist-lite" depends="jars,-ant-dist-warn-jdk9+"
            description="--> creates a minimum distribution to run Apache Ant">
  
      <mkdir dir="${dist.dir}"/>

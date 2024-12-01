@@ -1,8 +1,8 @@
-%bcond_with bootstrap
+%bcond_without bootstrap
 # Bootstrapping jpackage stuff is a giant mess. Ant can be built without it,
 # but then doesn't provide all the mvn(*) dependencies jpackage is so fond
 # of.
-%bcond_without jpackage
+%bcond_with jpackage
 # Optional dependencies...
 %bcond_without antlr
 
@@ -10,8 +10,8 @@
 %global major_version 1.8
 
 Name:           ant
-Version:        1.10.5
-Release:        6
+Version:        1.10.15
+Release:        1
 Summary:        Build tool for java
 License:        ASL 2.0
 URL:            https://ant.apache.org/
@@ -335,24 +335,42 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{ant} test
 %endif
 
+%if %{with jpackage}
 %files -f .mfiles-lib
+%else
+%files
+%endif
 %doc KEYS LICENSE NOTICE README WHATSNEW
 %attr(0755,root,root) %{_bindir}/ant
 %dir %{_datadir}/ant
 %dir %{_datadir}/ant/lib
 %{_datadir}/ant/lib/ant.jar
+%{_datadir}/ant/lib/ant-imageio.jar
 %{_datadir}/ant/lib/ant-launcher.jar
 
 # Some modules get built even in bootstrap mode because of
 # prebuilt jars
+%if %{with jpackage}
 %files junit -f .mfiles-junit
+%else
+%files junit
+%endif
+%{_datadir}/ant/lib/ant-junitlauncher.jar
 %{_datadir}/ant/lib/ant-junit.jar
 %{_datadir}/ant/lib/ant-junit4.jar
 
+%if %{with jpackage}
 %files jmf -f .mfiles-jmf
+%else
+%files jmf
+%endif
 %{_datadir}/ant/lib/%{name}-jmf.jar
 
+%if %{with jpackage}
 %files swing -f .mfiles-swing
+%else
+%files swing
+%endif
 %{_datadir}/ant/lib/%{name}-swing.jar
 
 %if 0
