@@ -272,9 +272,9 @@ build-jar-repository -s -p lib/optional $DEPS
 %endif
 
 # Fix file-not-utf8 rpmlint warning
-iconv KEYS -f iso-8859-1 -t utf-8 -o KEYS.utf8
+iconv KEYS -f iso-8859-15 -t utf-8 -o KEYS.utf8
 mv KEYS.utf8 KEYS
-iconv LICENSE -f iso-8859-1 -t utf-8 -o LICENSE.utf8
+iconv LICENSE -f iso-8859-15 -t utf-8 -o LICENSE.utf8
 mv LICENSE.utf8 LICENSE
 
 %build
