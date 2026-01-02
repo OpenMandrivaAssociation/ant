@@ -4,7 +4,7 @@
 
 Name:           ant
 Version:        1.10.15
-Release:        2
+Release:        3
 Summary:        Java build tool
 Summary(it):    Tool per la compilazione di programmi java
 Summary(fr):    Outil de compilation pour java
@@ -20,6 +20,7 @@ Source3:        ant.asciidoc
 Patch0:         %{name}-build.xml.patch
 
 BuildRequires:  asciidoctor
+BuildRequires:  locales-extra-charsets
 BuildRequires:  javapackages-bootstrap
 
 %if %{without ant_minimal}
@@ -315,6 +316,10 @@ sed -e 's:/etc/ant.conf:%{_sysconfdir}/ant.conf:g' \
 
 # Remove unnecessary JARs from the classpath
 sed -i 's/jaxp_parser_impl//;s/xml-commons-apis//' src/script/ant
+
+# Fix file-not-utf8 rpmlint warning
+iconv KEYS -f iso-8859-15 -t utf-8 -o KEYS.utf8
+mv KEYS.utf8 KEYS
 
 # We want a hard dep on antlr
 %pom_xpath_remove pom:optional src/etc/poms/ant-antlr/pom.xml
