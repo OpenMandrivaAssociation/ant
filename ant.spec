@@ -3,8 +3,8 @@
 %global ant_home %{_datadir}/ant
 
 Name:           ant
-Version:        1.10.15
-Release:        3
+Version:        1.10.17
+Release:        1
 Summary:        Java build tool
 Summary(it):    Tool per la compilazione di programmi java
 Summary(fr):    Outil de compilation pour java
@@ -280,7 +280,7 @@ Documentation pour %{name}.
 # -----------------------------------------------------------------------------
 
 %prep
-%autosetup -p1 -C
+%autosetup -p1 -C -n apache-ant-1.10.17
 
 # clean jar files
 find . -name "*.jar" | xargs -t rm
