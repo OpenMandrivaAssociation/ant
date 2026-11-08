@@ -1,0 +1,40 @@
+--- a/src/script/ant
++++ b/src/script/ant
+@@ -354,6 +354,37 @@
+     ;;
+   esac
+ fi
++# OpenMandriva: /etc/ant.d lists absolute jar paths, one per line.
++# Optional task packages drop dependency jars there. The launcher adds
++# them to -cp, which is the same class loader as ANT_HOME/lib.
++if [ -d /etc/ant.d ]; then
++  for file in /etc/ant.d/*; do
++    if [ -f "$file" ]; then
++      case "$file" in
++        *~|*#*|*.rpmsave|*.rpmnew)
++          ;;
++        *)
++          while IFS= read -r dep || [ -n "$dep" ]; do
++            if [ -n "$dep" ]; then
++              case "$dep" in
++                \#*)
++                  ;;
++                *)
++                  if [ -z "$CLASSPATH" ]; then
++                    CLASSPATH=$dep
++                  else
++                    CLASSPATH=$CLASSPATH:$dep
++                  fi
++                  ;;
++              esac
++            fi
++          done < "$file"
++          ;;
++      esac
++    fi
++  done
++fi
++
+ # Execute ant using eval/exec to preserve spaces in paths,
+ # java options, and ant args
+ ant_sys_opts=
