@@ -1,6 +1,6 @@
 Name:		ant
 Version:	1.10.18
-Release:	1
+Release:	2
 Summary:	Java build tool
 Group:		Development/Java
 License:	Apache-2.0
@@ -8,6 +8,7 @@ URL:		https://ant.apache.org/
 Source0:	https://downloads.apache.org/ant/source/apache-ant-%{version}-src.tar.gz
 Source1:	ant.asciidoc
 Source2:	ant.conf
+Source3:	https://archive.apache.org/dist/ant/source/apache-ant-1.10.17-src.tar.gz
 Patch0:		ant-system-classpath.patch
 BuildArch:	noarch
 BuildRequires:	asciidoctor
@@ -41,9 +42,11 @@ Obsoletes:	%{name}-apache-log4j < %{version}-%{release}
 
 %description
 Apache Ant drives a build from targets and tasks. This package is the
-command line tool. It uses the current Java and system jars. Optional
-tasks whose libraries are not packaged (JSch, ORO, BSF, JDepend, Xalan,
-Log4j 1, Jakarta Mail, JUnit 5) are not built.
+command line tool. It uses the current Java and system jars. The
+1.10.17 ant and ant-launcher jars are installed beside %{version}
+for callers that pin that release. Optional tasks whose libraries
+are not packaged (JSch, ORO, BSF, JDepend, Xalan, Log4j 1, Jakarta
+Mail, JUnit 5) are not built.
 
 %package lib
 Summary:	Core libraries for %{name}
@@ -162,13 +165,14 @@ the Apache-1.1 license.
 %prep
 %setup -q -n apache-ant-%{version}
 %autopatch -p1
-# The source archive ships prebuilt JUnit and Hamcrest jars. Use the
-# system copies instead.
-find . -name '*.jar' -delete
+%setup -q -T -D -a 3 -n apache-ant-%{version}
+# The source archives ship prebuilt jars. Use the system copies instead.
+find . \( -name '*.jar' -o -name '*.class' -o -name '*.so' -o -name '*.node' -o -name '*.wasm' \) -delete
 sed -i 's/commons-logging-api/commons-logging/' src/etc/poms/ant-commons-logging/pom.xml
 # The distribution target also builds the test jar, which needs the
 # whole test suite. The runtime jars do not.
 sed -i 's/depends="jars,test-jar,component-boms,-ant-dist-warn-jdk9+"/depends="jars,-ant-dist-warn-jdk9+"/' build.xml
+sed -i 's/depends="jars,test-jar,-ant-dist-warn-jdk9+"/depends="jars,-ant-dist-warn-jdk9+"/' apache-ant-1.10.17/build.xml
 
 %build
 export JAVA_HOME="${JAVA_HOME:-/usr/lib/jvm/java}"
@@ -218,6 +222,53 @@ open("build/ant-bootstrap.pom", "w").write("""<?xml version="1.0" encoding="UTF-
 """)
 PY
 
+# org.apache.ant:ant and ant-launcher 1.10.17 stay beside %{version}.
+# The command and the Ant lib symlinks keep %{version}.
+(
+cd apache-ant-1.10.17
+opt=lib/optional
+mkdir -p "$opt"
+linkjar %{_javadir}/junit.jar junit.jar
+linkjar %{_javadir}/hamcrest/hamcrest.jar hamcrest.jar
+linkjar %{_javadir}/commons-net.jar commons-net.jar
+linkjar %{_javadir}/commons-io.jar commons-io.jar
+linkjar %{_javadir}/commons-logging.jar commons-logging.jar
+linkjar %{_javadir}/bcel.jar bcel.jar
+linkjar %{_javadir}/commons-lang3.jar commons-lang3.jar
+linkjar %{_javadir}/antlr.jar antlr.jar
+linkjar %{_javadir}/regexp.jar regexp.jar
+linkjar %{_javadir}/xml-resolver.jar xml-resolver.jar
+linkjar %{_javadir}/xz.jar xz.jar
+sh bootstrap.sh
+test -s build/lib/ant.jar
+test -s build/lib/ant-launcher.jar
+python - << 'PY'
+from pathlib import Path
+def write_pom(artifact):
+    text = """<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.ant</groupId>
+  <artifactId>ARTIFACT</artifactId>
+  <version>1.10.17</version>
+  <name>Apache Ant</name>
+  <description>Apache Ant ARTIFACT 1.10.17, built from source.</description>
+  <url>https://ant.apache.org/</url>
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+</project>
+"""
+    Path("build/" + artifact + "-1.10.17.pom").write_text(text.replace("ARTIFACT", artifact))
+write_pom("ant")
+write_pom("ant-launcher")
+PY
+)
+
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/ant/{bin,lib,etc,manual}
@@ -245,13 +296,29 @@ install_art() {
 	shift 3
 	sysjar install --buildroot %{buildroot} --artifact "${pom}:${jar}" --filelist "${list}" "$@"
 }
+sysjar install --buildroot %{buildroot} \
+	--artifact "apache-ant-1.10.17/build/ant-1.10.17.pom:apache-ant-1.10.17/build/lib/ant.jar" \
+	--file-name ant-1.10.17 \
+	--alias ant:ant --alias apache:ant \
+	--filelist .mfiles-ant1017
+/bin/mv %{buildroot}/usr/share/sysjar/index/org.apache.ant/ant.sysjar \
+	%{buildroot}/usr/share/sysjar/index/org.apache.ant/ant-1.10.17.sysjar
+sed -i 's|/usr/share/sysjar/index/org.apache.ant/ant\.sysjar|/usr/share/sysjar/index/org.apache.ant/ant-1.10.17.sysjar|' .mfiles-ant1017
+sysjar install --buildroot %{buildroot} \
+	--artifact "apache-ant-1.10.17/build/ant-launcher-1.10.17.pom:apache-ant-1.10.17/build/lib/ant-launcher.jar" \
+	--file-name ant-launcher-1.10.17 \
+	--alias ant:ant-launcher \
+	--filelist .mfiles-launcher1017
+/bin/mv %{buildroot}/usr/share/sysjar/index/org.apache.ant/ant-launcher.sysjar \
+	%{buildroot}/usr/share/sysjar/index/org.apache.ant/ant-launcher-1.10.17.sysjar
+sed -i 's|/usr/share/sysjar/index/org.apache.ant/ant-launcher\.sysjar|/usr/share/sysjar/index/org.apache.ant/ant-launcher-1.10.17.sysjar|' .mfiles-launcher1017
 install_art .mfiles-ant src/etc/poms/ant/pom.xml build/lib/ant.jar \
 	--alias ant:ant --alias apache:ant --alias org.apache.ant:ant-nodeps
 install_art .mfiles-launcher src/etc/poms/ant-launcher/pom.xml build/lib/ant-launcher.jar \
 	--alias ant:ant-launcher
 install_art .mfiles-bootstrap build/ant-bootstrap.pom build/lib/ant-bootstrap.jar
 sysjar install --buildroot %{buildroot} --artifact src/etc/poms/pom.xml --filelist .mfiles-parent
-cat .mfiles-ant .mfiles-launcher .mfiles-bootstrap .mfiles-parent | awk '!seen[$0]++' > .mfiles-lib
+cat .mfiles-ant .mfiles-launcher .mfiles-bootstrap .mfiles-parent .mfiles-ant1017 .mfiles-launcher1017 | awk '!seen[$0]++' > .mfiles-lib
 
 liblink() {
 	ln -s "../../java/$2" "%{buildroot}%{_datadir}/ant/lib/$1"
@@ -350,6 +417,36 @@ sed -i "s|/etc/ant.d|$PWD/check.d|g" check-ant
 grep -F -q 'probe ok' check.log
 grep -F -q 'junit ok' check.log
 grep -F -q 'Failures: 0' check.log
+
+cat > Ant1017Check.java << 'EOF'
+public class Ant1017Check {
+    public static void main(String[] args) throws Exception {
+        String version = org.apache.tools.ant.Main.getAntVersion();
+        String shortVersion = org.apache.tools.ant.Main.getShortAntVersion();
+        if (!"1.10.17".equals(shortVersion)) {
+            throw new RuntimeException(version);
+        }
+        if (!"org.apache.tools.ant.Main".equals(org.apache.tools.ant.launch.Launcher.MAIN_CLASS)) {
+            throw new RuntimeException(org.apache.tools.ant.launch.Launcher.MAIN_CLASS);
+        }
+        org.apache.tools.ant.Project project = new org.apache.tools.ant.Project();
+        project.init();
+        project.setProperty("pin", "17");
+        if (!"17".equals(project.getProperty("pin"))) {
+            throw new RuntimeException(project.getProperty("pin"));
+        }
+        System.out.println("ant1017_ok " + shortVersion);
+    }
+}
+EOF
+"$JAVA_HOME/bin/javac" --release 8 -proc:none \
+	-cp apache-ant-1.10.17/build/lib/ant.jar:apache-ant-1.10.17/build/lib/ant-launcher.jar \
+	Ant1017Check.java
+"$JAVA_HOME/bin/java" \
+	-cp "apache-ant-1.10.17/build/lib/ant.jar:apache-ant-1.10.17/build/lib/ant-launcher.jar:." \
+	Ant1017Check > check-1017.log
+cat check-1017.log
+grep -F -q 'ant1017_ok 1.10.17' check-1017.log
 
 %files
 %license LICENSE NOTICE

@@ -1,4 +1,5 @@
 sources:
   apache-ant-1.10.18-src.tar.gz: 0aaf32f91581a296bbf369d1e64254fba3189a30
+  apache-ant-1.10.17-src.tar.gz: ccd0f1a04ed863107e04f8e32dfe19e65d07a68b
 removed_sources:
   apache-ant-1.10.17-src.tar.bz2: a171cb71bf8550df4aacb97c0867c1f301ff11f5
